@@ -1,6 +1,6 @@
 const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
 
-async function fetchWithRetry(url: string, retries = 2) {
+async function fetchWithRetry(url: string, retries = 3) {
   for (let i = 0; i < retries; i++) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -8,7 +8,7 @@ async function fetchWithRetry(url: string, retries = 2) {
     } catch {
       // fall through to retry
     }
-    if (i < retries - 1) await new Promise((r) => setTimeout(r, 400));
+    if (i < retries - 1) await new Promise((r) => setTimeout(r, 800 * (i + 1)));
   }
   return null;
 }
