@@ -1,0 +1,41 @@
+import Link from "next/link";
+import Image from "next/image";
+import { getDepartmentProducts, getDepartments } from "@/lib/api";
+
+export default async function DepartmentPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const [products, departments] = await Promise.all([
+    getDepartmentProducts(id),
+    getDepartments(),
+  ]);
+
+  const department = departments.find((d: any) => d._id === id);
+
+  return (
+    <div className="max-w-6xl mx-auto px-6 py-12">
+      <h1 className="font-display text-3xl font-bold tracking-tight mb-8">
+        {department?.title || "Department"}
+      </h1>
+
+      {products.length === 0 ? (
+        <p className="text-[--steel]">No products in this department yet.</p>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {products.map((p: any) => (
+            <Link
+              key={p._id}
+              href={`/department/${id}/${p._id}`}
+              className="border border-[--line] rounded-xl p-4 hover:border-[--signal] transition"
+            >
+              {p.images?.[0] && (
+                <Image src={p.images[0]} alt={p.name} width={300} height={300} className="w-full h-36 object-cover rounded-lg mb-3" />
+              )}
+              <h3 className="font-medium">{p.name}</h3>
+              <p className="text-sm text-[--steel] mt-1">৳{p.price}</p>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
