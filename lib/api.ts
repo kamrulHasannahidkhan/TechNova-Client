@@ -27,3 +27,8 @@ export async function getDepartmentProducts(departmentId: string) {
   const data = await fetchWithRetry(`${API_URL}/products?department=${departmentId}`);
   return data || [];
 }
+
+export async function getProductsByTag(tag: string) {
+  const data = await fetchWithRetry(`${API_URL}/products?tag=${tag}`);
+  return data || [];
+}
