@@ -1,42 +1,33 @@
 const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
 
-export async function getProducts() {
-  try {
-    const res = await fetch(`${API_URL}/products`, { cache: "no-store" });
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
+async function fetchWithRetry(url: string, retries = 2) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (res.ok) return res.json();
+    } catch {
+      // fall through to retry
+    }
+    if (i < retries - 1) await new Promise((r) => setTimeout(r, 400));
   }
+  return null;
+}
+
+export async function getProducts() {
+  const data = await fetchWithRetry(`${API_URL}/products`);
+  return data || [];
 }
 
 export async function getProduct(id: string) {
-  try {
-    const res = await fetch(`${API_URL}/products/${id}`, { cache: "no-store" });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
+  return fetchWithRetry(`${API_URL}/products/${id}`);
 }
 
 export async function getContentBySection(section: string) {
-  try {
-    const res = await fetch(`${API_URL}/content?section=${section}`, { cache: "no-store" });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data[0] || null;
-  } catch {
-    return null;
-  }
+  const data = await fetchWithRetry(`${API_URL}/content?section=${section}`);
+  return data?.[0] || null;
 }
 
 export async function getSections() {
-  try {
-    const res = await fetch(`${API_URL}/sections`, { cache: "no-store" });
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
+  const data = await fetchWithRetry(`${API_URL}/sections`);
+  return data || [];
 }
