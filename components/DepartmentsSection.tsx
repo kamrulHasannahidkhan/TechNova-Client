@@ -17,7 +17,7 @@ export default async function DepartmentsSection() {
       </h2>
       <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-y-8 gap-x-4">
         {departments.map((d: any) => (
-          
+          <a
             key={d._id}
             href={d.link || "#"}
             className="flex flex-col items-center text-center group"
