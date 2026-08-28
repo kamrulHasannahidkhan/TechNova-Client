@@ -42,7 +42,7 @@ export default async function Hero() {
           <p className={`mt-5 text-lg max-w-md ${bgImage ? "text-white/80" : "text-[--steel]"}`}>
             {description}
           </p>
-          
+          <a
             href={ctaLink}
             className="inline-block mt-8 bg-[--signal] text-white px-7 py-3.5 rounded-full font-medium hover:bg-white hover:text-[--ink] transition"
           >
