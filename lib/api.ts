@@ -13,21 +13,7 @@ async function fetchWithRetry(url: string, retries = 3) {
   return null;
 }
 
-export async function getProducts() {
-  const data = await fetchWithRetry(`${API_URL}/products`);
-  return data || [];
-}
-
-export async function getProduct(id: string) {
-  return fetchWithRetry(`${API_URL}/products/${id}`);
-}
-
 export async function getContentBySection(section: string) {
   const data = await fetchWithRetry(`${API_URL}/content?section=${section}`);
   return data?.[0] || null;
-}
-
-export async function getSections() {
-  const data = await fetchWithRetry(`${API_URL}/sections`);
-  return data || [];
 }
