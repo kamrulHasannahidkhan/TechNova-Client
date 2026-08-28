@@ -17,3 +17,8 @@ export async function getContentBySection(section: string) {
   const data = await fetchWithRetry(`${API_URL}/content?section=${section}`);
   return data?.[0] || null;
 }
+
+export async function getDepartments() {
+  const data = await fetchWithRetry(`${API_URL}/departments`);
+  return data || [];
+}
