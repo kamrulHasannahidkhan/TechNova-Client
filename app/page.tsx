@@ -1,6 +1,8 @@
 import Hero from "@/components/Hero";
 import DepartmentsSection from "@/components/DepartmentsSection";
 import ProductRow from "@/components/ProductRow";
+import TrustBadges from "@/components/TrustBadges";
+import BottomBanner from "@/components/BottomBanner";
 import { getProductsByTag } from "@/lib/api";
 
 export default async function HomePage() {
@@ -17,6 +19,8 @@ export default async function HomePage() {
       <ProductRow id="new-arrivals" title="New Arrivals" products={newArrivals} />
       <ProductRow id="exclusive" title="Exclusive" products={exclusive} />
       <ProductRow id="best-sellers" title="Best Sellers" products={bestSellers} />
+      <TrustBadges />
+      <BottomBanner />
     </>
   );
 }

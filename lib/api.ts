@@ -37,3 +37,8 @@ export async function getProductsByTag(tag: string) {
   const data = await fetchWithRetry(`${API_URL}/products?tag=${tag}`);
   return data || [];
 }
+
+export async function getPerks() {
+  const data = await fetchWithRetry(`${API_URL}/perks`);
+  return data || [];
+}
