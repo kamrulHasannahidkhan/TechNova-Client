@@ -1,79 +1,69 @@
 import { getContentBySection } from "@/lib/api";
 
-const SPECS = [
-  "48H DELIVERY", "GENUINE WARRANTY", "COD AVAILABLE", "bKash · Nagad · Rocket",
-  "48H DELIVERY", "GENUINE WARRANTY", "COD AVAILABLE", "bKash · Nagad · Rocket",
-];
-
 export default async function Hero() {
   const content = await getContentBySection("hero");
 
+  const badge = content?.badge || "SPECIAL OFFER!";
   const title = content?.title || "Gear that\nearns its specs.";
-  const description = content?.description || "Every listing here is checked, boxed, and tested before it ships — no reused stock photos, no guessing.";
-  const ctaText = content?.ctaText || "Shop now";
-  const ctaLink = content?.ctaLink || "/cart";
-  const bgImage = content?.image;
+  const description = content?.description;
+  const discountText = content?.discountText || "UP TO 30% OFF";
+  const ctaText = content?.ctaText || "Shop Now";
+  const ctaLink = content?.ctaLink || "#";
+  const contactLine = content?.contactLine;
+  const productImage = content?.image;
 
   return (
-    <section
-      className="relative border-b border-[--line] overflow-hidden"
-      style={
-        bgImage
-          ? { backgroundImage: `url(${bgImage})`, backgroundSize: "cover", backgroundPosition: "center" }
-          : undefined
-      }
-    >
-      {bgImage && (
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/20" />
-      )}
-
-      <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16 grid md:grid-cols-2 gap-10 items-center min-h-[520px]">
-        <div>
-          <p className="font-mono-spec text-xs tracking-widest mb-4 text-[--signal]">
-            EL — ELECTRONICS CATALOG
-          </p>
-          <h1
-            className={`font-display text-5xl md:text-6xl font-bold leading-[1.05] tracking-tight whitespace-pre-line ${
-              bgImage ? "text-white" : "text-[--ink]"
-            }`}
-          >
+    <section className="relative bg-gradient-to-br from-[#0b1220] via-[#0f1a33] to-[#0b1220] overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6 py-14 grid md:grid-cols-2 gap-8 items-center min-h-[420px]">
+        <div className="relative z-10">
+          <p className="font-display text-2xl md:text-3xl font-bold text-white mb-2">{badge}</p>
+          <h1 className="font-display text-4xl md:text-6xl font-black leading-[1.05] tracking-tight text-[--signal] whitespace-pre-line">
             {title}
           </h1>
-          <p className={`mt-5 text-lg max-w-md ${bgImage ? "text-white/80" : "text-[--steel]"}`}>
-            {description}
-          </p>
-          <a
+          {description && (
+            <p className="mt-4 text-white/70 max-w-md">{description}</p>
+          )}
+          
             href={ctaLink}
-            className="inline-block mt-8 bg-[--signal] text-white px-7 py-3.5 rounded-full font-medium hover:bg-white hover:text-[--ink] transition"
+            className="inline-block mt-6 bg-[--signal] text-white px-7 py-3 rounded-full font-semibold hover:bg-white hover:text-[--ink] transition"
           >
             {ctaText}
           </a>
+          {contactLine && (
+            <p className="mt-8 font-mono-spec text-sm text-yellow-400 font-bold">{contactLine}</p>
+          )}
         </div>
 
-        <div
-          className={`rounded-2xl p-6 ${
-            bgImage ? "bg-white/10 backdrop-blur-md border border-white/20" : "border border-[--line] bg-white/60"
-          }`}
-        >
-          <p className={`font-mono-spec text-xs mb-3 ${bgImage ? "text-white/60" : "text-[--steel]"}`}>
-            LIVE — TODAY
-          </p>
-          <div className="overflow-hidden">
-            <div className="flex gap-8 whitespace-nowrap ticker-track w-max">
-              {SPECS.map((s, i) => (
-                <span key={i} className={`font-mono-spec text-sm ${bgImage ? "text-white" : "text-[--ink]"}`}>
-                  {s} <span className="text-[--signal] mx-2">/</span>
-                </span>
-              ))}
+        <div className="relative flex items-center justify-center">
+          {discountText && (
+            <div className="absolute -top-2 right-4 bg-yellow-400 text-[--ink] font-display font-black text-center px-4 py-3 rounded-lg -rotate-6 shadow-lg z-20">
+              <span className="block text-xs leading-none">UP TO</span>
+              <span className="block text-2xl leading-tight">{discountText.replace(/[^0-9%]/g, "") || discountText}</span>
+              <span className="block text-xs leading-none">DISCOUNT</span>
             </div>
-          </div>
-          <div className={`mt-6 grid grid-cols-3 gap-4 font-mono-spec text-xs ${bgImage ? "text-white/60" : "text-[--steel]"}`}>
-            <div><span className={`block text-2xl font-display ${bgImage ? "text-white" : "text-[--ink]"}`}>24/7</span>SUPPORT</div>
-            <div><span className={`block text-2xl font-display ${bgImage ? "text-white" : "text-[--ink]"}`}>100%</span>VERIFIED</div>
-            <div><span className={`block text-2xl font-display ${bgImage ? "text-white" : "text-[--ink]"}`}>7D</span>RETURN</div>
-          </div>
+          )}
+          {productImage ? (
+            <img
+              src={productImage}
+              alt={title}
+              className="max-h-[320px] w-auto object-contain drop-shadow-2xl"
+            />
+          ) : (
+            <div className="w-full h-64 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/30 text-sm">
+              Add a product image from Site Content
+            </div>
+          )}
         </div>
       </div>
+
+      {ctaText && (
+        
+          href={ctaLink}
+          className="absolute bottom-6 right-6 bg-yellow-400 text-[--ink] font-bold px-5 py-2.5 rounded-lg flex items-center gap-2 hover:bg-white transition"
+        >
+          → {ctaText === "Shop Now" ? "Order Now" : ctaText}
+        </a>
+      )}
     </section>
   );
 }
