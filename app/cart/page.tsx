@@ -7,7 +7,6 @@ import { useCart } from "@/context/CartContext";
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, clearCart, total, isHydrated } = useCart();
 
-  // Handle Hydration mismatch state gracefully
   if (!isHydrated) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-20 flex justify-center">
@@ -16,7 +15,6 @@ export default function CartPage() {
     );
   }
 
-  // Empty Cart State
   if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-20 text-center">
@@ -33,22 +31,21 @@ export default function CartPage() {
             Looks like you haven&apos;t added any hardware or items to your cart yet.
           </p>
           <Link
-            href="/#electronics"
+            href="/"
             className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-[--ink] text-white text-sm font-medium hover:bg-[--signal] transition-colors shadow-sm"
           >
-            Explore Electronics &rarr;
+            Continue Shopping &rarr;
           </Link>
         </div>
       </div>
     );
   }
 
-  const estimatedShipping = 100; // Standard shipping rate in BDT
+  const estimatedShipping = 100;
   const grandTotal = total + estimatedShipping;
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
-      {/* Header */}
       <div className="flex items-center justify-between border-b border-[--line]/60 pb-6 mb-8">
         <div>
           <span className="font-mono-spec text-xs text-[--signal] tracking-widest uppercase">
@@ -58,7 +55,7 @@ export default function CartPage() {
             Shopping Cart
           </h1>
         </div>
-        
+
         <button
           onClick={clearCart}
           className="font-mono-spec text-xs text-rose-600 hover:text-rose-700 underline underline-offset-4 transition-colors"
@@ -68,7 +65,6 @@ export default function CartPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        {/* Left Column: Item List (Cols 1-7) */}
         <div className="lg:col-span-7 space-y-4">
           {items.map((item) => {
             const itemTotal = item.price * item.quantity;
@@ -76,9 +72,8 @@ export default function CartPage() {
             return (
               <div
                 key={item._id}
-                className="flex gap-4 p-4 border border-[--line] rounded-2xl bg-white/60 hover:bg-white backdrop-blur-sm transition-all duration-200"
+                className="flex gap-4 p-4 border border-[--line] rounded-2xl bg-white hover:bg-white backdrop-blur-sm transition-all duration-200"
               >
-                {/* Product Image */}
                 <div className="relative aspect-square w-24 shrink-0 rounded-xl overflow-hidden border border-[--line] bg-white">
                   {item.image ? (
                     <Image
@@ -95,23 +90,21 @@ export default function CartPage() {
                   )}
                 </div>
 
-                {/* Details & Controls */}
                 <div className="flex flex-col justify-between flex-1 py-0.5">
                   <div className="flex justify-between items-start gap-2">
                     <div>
-                      <h3 className="font-medium text-[--ink] line-clamp-1">
+                      <h3 className="font-medium text-gray-900 line-clamp-1">
                         {item.name}
                       </h3>
-                      <p className="font-mono-spec text-xs text-[--steel] mt-1">
+                      <p className="font-mono-spec text-xs text-gray-500 mt-1">
                         ৳{item.price.toLocaleString("en-BD")} each
                       </p>
                     </div>
 
-                    {/* Remove Item */}
                     <button
                       onClick={() => removeFromCart(item._id)}
                       aria-label={`Remove ${item.name} from cart`}
-                      className="text-[--steel] hover:text-rose-600 p-1 transition-colors"
+                      className="text-gray-400 hover:text-rose-600 p-1 transition-colors"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -119,29 +112,28 @@ export default function CartPage() {
                     </button>
                   </div>
 
-                  {/* Quantity Stepper & Line Item Price */}
-                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-[--line]/40">
-                    <div className="flex items-center gap-1 border border-[--line] rounded-lg bg-white px-1.5 py-0.5">
+                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200">
+                    <div className="flex items-center gap-1 border border-gray-300 rounded-lg bg-white px-1.5 py-0.5">
                       <button
                         onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                        className="w-7 h-7 flex items-center justify-center text-[--ink] hover:bg-[--line]/30 rounded transition-colors"
+                        className="w-7 h-7 flex items-center justify-center text-gray-900 font-bold hover:bg-gray-100 rounded transition-colors"
                         aria-label="Decrease quantity"
                       >
-                        -
+                        −
                       </button>
-                      <span className="font-mono-spec text-xs font-semibold w-8 text-center text-[--ink]">
+                      <span className="font-mono-spec text-xs font-semibold w-8 text-center text-gray-900">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                        className="w-7 h-7 flex items-center justify-center text-[--ink] hover:bg-[--line]/30 rounded transition-colors"
+                        className="w-7 h-7 flex items-center justify-center text-gray-900 font-bold hover:bg-gray-100 rounded transition-colors"
                         aria-label="Increase quantity"
                       >
                         +
                       </button>
                     </div>
 
-                    <span className="font-mono-spec font-bold text-[--ink]">
+                    <span className="font-mono-spec font-bold text-gray-900">
                       ৳{itemTotal.toLocaleString("en-BD")}
                     </span>
                   </div>
@@ -151,26 +143,25 @@ export default function CartPage() {
           })}
         </div>
 
-        {/* Right Column: Order Summary (Cols 8-12) */}
-        <div className="lg:col-span-5 lg:sticky lg:top-24 border border-[--line] rounded-2xl p-6 bg-white/80 backdrop-blur-sm space-y-6 shadow-sm">
-          <h2 className="font-mono-spec text-xs font-semibold text-[--ink] tracking-widest uppercase pb-3 border-b border-[--line]">
+        <div className="lg:col-span-5 lg:sticky lg:top-24 border border-[--line] rounded-2xl p-6 bg-white backdrop-blur-sm space-y-6 shadow-sm">
+          <h2 className="font-mono-spec text-xs font-semibold text-gray-900 tracking-widest uppercase pb-3 border-b border-gray-200">
             Order Summary
           </h2>
 
           <div className="space-y-3 font-mono-spec text-xs">
-            <div className="flex justify-between text-[--steel]">
+            <div className="flex justify-between text-gray-500">
               <span>Subtotal</span>
-              <span className="text-[--ink] font-medium">৳{total.toLocaleString("en-BD")}</span>
-            </div>
-            
-            <div className="flex justify-between text-[--steel]">
-              <span>Estimated Shipping</span>
-              <span className="text-[--ink] font-medium">৳{estimatedShipping.toLocaleString("en-BD")}</span>
+              <span className="text-gray-900 font-medium">৳{total.toLocaleString("en-BD")}</span>
             </div>
 
-            <div className="pt-3 border-t border-[--line] flex justify-between text-sm">
-              <span className="font-bold text-[--ink]">Total</span>
-              <span className="font-bold text-[--ink] text-base">
+            <div className="flex justify-between text-gray-500">
+              <span>Estimated Shipping</span>
+              <span className="text-gray-900 font-medium">৳{estimatedShipping.toLocaleString("en-BD")}</span>
+            </div>
+
+            <div className="pt-3 border-t border-gray-200 flex justify-between text-sm">
+              <span className="font-bold text-gray-900">Total</span>
+              <span className="font-bold text-gray-900 text-base">
                 ৳{grandTotal.toLocaleString("en-BD")}
               </span>
             </div>
@@ -183,8 +174,8 @@ export default function CartPage() {
             Proceed to Checkout &rarr;
           </Link>
 
-          <div className="p-3.5 rounded-xl border border-[--line]/60 bg-[--line]/20 font-mono-spec text-[11px] text-[--steel] space-y-1.5">
-            <div className="flex items-center gap-1.5 text-[--ink] font-semibold">
+          <div className="p-3.5 rounded-xl border border-gray-200 bg-gray-50 font-mono-spec text-[11px] text-gray-600 space-y-1.5">
+            <div className="flex items-center gap-1.5 text-gray-900 font-semibold">
               <span className="text-[--signal]">✓</span> Guaranteed Delivery
             </div>
             <p className="leading-normal">
