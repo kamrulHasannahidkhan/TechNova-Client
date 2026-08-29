@@ -2,7 +2,11 @@ import { getContentBySection } from "@/lib/api";
 
 export default async function BottomBanner() {
   const content = await getContentBySection("bottom-banner");
-  if (!content) return null;
+
+  if (!content) {
+    console.log("BottomBanner: no content returned");
+    return null;
+  }
 
   return (
     <section className="max-w-6xl mx-auto px-6 pb-16">
