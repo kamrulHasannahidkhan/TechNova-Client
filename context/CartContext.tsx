@@ -5,6 +5,8 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
+  useMemo,
   ReactNode,
 } from "react";
 
@@ -65,7 +67,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, isHydrated]);
 
   // Cart Actions
-  const addToCart = (product: Omit<CartItem, "quantity">) => {
+  const addToCart = useCallback((product: Omit<CartItem, "quantity">) => {
     setItems((prev) => {
       const existing = prev.find((i) => i._id === product._id);
       if (existing) {
@@ -76,50 +78,69 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return [...prev, { ...product, quantity: 1 }];
     });
     setIsCartOpen(true); // Automatically open drawer when item is added
-  };
+  }, []);
 
-  const removeFromCart = (id: string) => {
+  const removeFromCart = useCallback((id: string) => {
     setItems((prev) => prev.filter((i) => i._id !== id));
-  };
+  }, []);
 
-  const updateQuantity = (id: string, quantity: number) => {
+  const updateQuantity = useCallback((id: string, quantity: number) => {
     if (quantity < 1) return removeFromCart(id);
     setItems((prev) =>
       prev.map((i) => (i._id === id ? { ...i, quantity } : i))
     );
-  };
+  }, [removeFromCart]);
 
-  const clearCart = () => setItems([]);
+  const clearCart = useCallback(() => setItems([]), []);
 
   // Drawer Toggles
-  const openCart = () => setIsCartOpen(true);
-  const closeCart = () => setIsCartOpen(false);
-  const toggleCart = () => setIsCartOpen((prev) => !prev);
+  const openCart = useCallback(() => setIsCartOpen(true), []);
+  const closeCart = useCallback(() => setIsCartOpen(false), []);
+  const toggleCart = useCallback(() => setIsCartOpen((prev) => !prev), []);
 
   // Calculated Totals
-  const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
-
-  return (
-    <CartContext.Provider
-      value={{
-        items: isHydrated ? items : [],
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        total,
-        itemCount: isHydrated ? itemCount : 0,
-        isCartOpen,
-        openCart,
-        closeCart,
-        toggleCart,
-        isHydrated,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+  const total = useMemo(
+    () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+    [items]
   );
+
+  const itemCount = useMemo(
+    () => items.reduce((sum, i) => sum + i.quantity, 0),
+    [items]
+  );
+
+  const value = useMemo(
+    () => ({
+      items: isHydrated ? items : [],
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      total,
+      itemCount: isHydrated ? itemCount : 0,
+      isCartOpen,
+      openCart,
+      closeCart,
+      toggleCart,
+      isHydrated,
+    }),
+    [
+      items,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      total,
+      itemCount,
+      isCartOpen,
+      openCart,
+      closeCart,
+      toggleCart,
+      isHydrated,
+    ]
+  );
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
 export function useCart() {
