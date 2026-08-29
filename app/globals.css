@@ -1,21 +1,22 @@
 @import "tailwindcss";
 
+/* Color Palette Variable Tokens */
 :root {
-  /* Brand Color System */
+  /* Default Light Mode */
   --ink: #14151a;
   --paper: #f8fafc;
   --signal: #2563eb;
   --steel: #64748b;
   --line: #e2e8f0;
 
-  /* Theme Accents & Surface Variants */
+  /* Surface & Accents */
   --surface-subtle: #ffffff;
   --surface-dark: #0f172a;
   --accent-gold: #f59e0b;
   --accent-gold-hover: #d97706;
 }
 
-/* Dark Mode Overrides */
+/* System Dark Mode Auto-Detection */
 @media (prefers-color-scheme: dark) {
   :root {
     --ink: #f8fafc;
@@ -23,13 +24,18 @@
     --signal: #3b82f6;
     --steel: #94a3b8;
     --line: #1e293b;
+
+    /* Dark Mode Surfaces */
     --surface-subtle: #121824;
+    --surface-dark: #020617;
+    --accent-gold: #fbbf24;
+    --accent-gold-hover: #f59e0b;
   }
 }
 
 /* Base Body Styles */
 body {
-  background: var(--paper);
+  background-color: var(--paper);
   color: var(--ink);
   font-family: var(--font-inter, system-ui), -apple-system, sans-serif;
   text-rendering: optimizeLegibility;
@@ -77,7 +83,7 @@ html {
   animation-play-state: paused;
 }
 
-/* Custom High-Tech Scrollbar */
+/* Dynamic Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -96,7 +102,7 @@ html {
   background: var(--steel);
 }
 
-/* Reduced Motion Safeguard */
+/* Accessibility: Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   .ticker-track {
     animation: none;
