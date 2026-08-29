@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export default function ProductRow({ title, products }: { title: string; products: any[] }) {
+export default function ProductRow({ title, id, products }: { title: string; id?: string; products: any[] }) {
   if (products.length === 0) return null;
 
   return (
-    <section className="max-w-6xl mx-auto px-6 py-12 border-t border-[--line]">
+    <section id={id} className="max-w-6xl mx-auto px-6 py-12 border-t border-[--line]">
       <h2 className="font-display text-2xl font-bold tracking-tight mb-6">{title}</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {products.map((p: any) => (

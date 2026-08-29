@@ -14,9 +14,9 @@ export default async function HomePage() {
     <>
       <Hero />
       <DepartmentsSection />
-      <ProductRow title="New Arrivals" products={newArrivals} />
-      <ProductRow title="Exclusive" products={exclusive} />
-      <ProductRow title="Best Sellers" products={bestSellers} />
+      <ProductRow id="new-arrivals" title="New Arrivals" products={newArrivals} />
+      <ProductRow id="exclusive" title="Exclusive" products={exclusive} />
+      <ProductRow id="best-sellers" title="Best Sellers" products={bestSellers} />
     </>
   );
 }
