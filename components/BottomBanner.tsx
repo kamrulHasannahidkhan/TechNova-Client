@@ -34,7 +34,7 @@ export default async function BottomBanner() {
             <p className="text-sm text-[--ink]/70">{content.contactLine}</p>
           )}
           {content.ctaText && (
-            
+            <a
               href={content.ctaLink || "#"}
               className="inline-block mt-4 bg-white text-[--ink] font-semibold px-6 py-2.5 rounded-lg hover:bg-[--ink] hover:text-white transition"
             >
