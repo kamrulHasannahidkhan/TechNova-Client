@@ -169,7 +169,7 @@ export default function CartPage() {
 
           <Link
             href="/checkout"
-            className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[--ink] text-white font-medium text-sm hover:bg-[--signal] active:scale-[0.98] transition-all duration-200 shadow-sm"
+            className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-black text-white font-medium text-sm hover:bg-gray-800 active:scale-[0.98] transition-all duration-200 shadow-sm"
           >
             Proceed to Checkout &rarr;
           </Link>
