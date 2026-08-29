@@ -16,7 +16,7 @@ export default async function DepartmentsSection() {
     <section className="max-w-7xl mx-auto px-6 py-10 font-sans">
       {/* Header with full-width light bottom border */}
       <div className="border-b border-gray-200 pb-4 mb-10">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-100 tracking-tight">
           {title}
         </h2>
       </div>
@@ -27,7 +27,7 @@ export default async function DepartmentsSection() {
           <Link
             key={d._id}
             href={`/department/${d._id}`}
-            className="group flex flex-col items-center text-center transition-opacity hover:opacity-80"
+            className="group flex flex-col items-center  text-center transition-opacity hover:opacity-80"
           >
             {/* Minimalist Icon Container */}
             <div className="relative w-16 h-16 md:w-20 md:h-20 mb-3 flex items-center justify-center">
