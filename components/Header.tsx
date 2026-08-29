@@ -14,9 +14,9 @@ export default function Header() {
         </Link>
         <nav className="hidden md:flex gap-8 text-sm font-medium text-[--steel]">
           <Link href="/" className="hover:text-[--ink] transition">Home</Link>
-          <Link href="/#new-arrivals" className="hover:text-[--ink] transition">New Arrivals</Link>
-          <Link href="/#exclusive" className="hover:text-[--ink] transition">Exclusive</Link>
-          <Link href="/#best-sellers" className="hover:text-[--ink] transition">Best Sellers</Link>
+          <Link href="/new-arrivals" className="hover:text-[--ink] transition">New Arrivals</Link>
+          <Link href="/exclusive" className="hover:text-[--ink] transition">Exclusive</Link>
+          <Link href="/best-sellers" className="hover:text-[--ink] transition">Best Sellers</Link>
         </nav>
         <Link href="/cart" className="relative font-medium text-sm">
           Cart
