@@ -47,7 +47,7 @@ export default async function DepartmentsSection() {
             </div>
 
             {/* Department Title */}
-            <span className="text-xs md:text-sm font-medium text-gray-900 leading-tight group-hover:underline max-w-[110px]">
+            <span className="text-xs md:text-sm font-medium text-gray-100 leading-tight group-hover:underline max-w-[110px]">
               {d.title}
             </span>
           </Link>
