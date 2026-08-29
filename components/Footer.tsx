@@ -3,154 +3,154 @@ import Link from "next/link";
 
 export default async function Footer() {
   const content = await getContentBySection("footer");
-  const tagline = content?.description || "Checked, boxed, tested — before it ships.";
+  const tagline = content?.description || "TechNova: Your one-stop shop for Arduino, Raspberry Pi, sensors, modules, 3D printers, drones, and more. High-quality electronics for hobbyists and professionals.";
 
   return (
-    <footer className="relative border-t border-[--line] bg-[#0B0F17] text-slate-200 mt-24 overflow-hidden">
-      {/* Background Tech Glow & Grid Overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-900/10 via-transparent to-transparent pointer-events-none" />
-      <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
-
-      {/* Trust Badges Bar (High-Conversion Electronics Bar) */}
-      <div className="border-b border-[--line]/60 bg-white/[0.02]">
-        <div className="max-w-7xl mx-auto px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <span className="text-[--signal] font-mono-spec text-lg">⚡</span>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-white">Express Delivery</p>
-              <p className="text-xs text-[--steel]">Fast & insured dispatch</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <span className="text-[--signal] font-mono-spec text-lg">🛡️</span>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-white">Official Warranty</p>
-              <p className="text-xs text-[--steel]">100% authentic products</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <span className="text-[--signal] font-mono-spec text-lg">🔄</span>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-white">Easy Returns</p>
-              <p className="text-xs text-[--steel]">Hassle-free replacement</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <span className="text-[--signal] font-mono-spec text-lg">🔒</span>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-white">Secure Checkout</p>
-              <p className="text-xs text-[--steel]">Encrypted payments</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Footer Layout */}
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-12 gap-10">
+    <footer className="bg-[#121824] text-slate-300 text-sm mt-16 font-sans border-t border-slate-800">
+      {/* Main Footer Content */}
+      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
         
-        {/* Brand & Tagline Section */}
-        <div className="md:col-span-4 flex flex-col justify-between">
+        {/* Column 1: Brand Info & App Badges */}
+        <div className="lg:col-span-1 space-y-5">
           <div>
-            <div className="inline-flex items-center gap-2 mb-4">
-              <p className="font-display font-extrabold text-2xl tracking-wider text-white">
-                TechNova<span className="text-[--signal] animate-pulse">.</span>
-              </p>
-              <span className="text-[10px] font-mono-spec bg-[--signal]/10 text-[--signal] border border-[--signal]/30 px-2 py-0.5 rounded-full uppercase tracking-widest">
-                VERIFIED STORE
-              </span>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-emerald-400 font-bold text-2xl">⚡</span>
+              <div>
+                <span className="font-bold text-lg text-white tracking-wide block leading-none">
+                  TechNova<span className="text-emerald-400">.</span>
+                </span>
+                <span className="text-[10px] text-slate-400 tracking-wider">Stay Innovative</span>
+              </div>
             </div>
-            <p className="text-sm text-[--steel] leading-relaxed max-w-sm mb-6">
-              {tagline}
-            </p>
           </div>
-          <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5 flex items-center justify-between text-xs font-mono-spec">
-            <span className="text-[--steel]">SYSTEM STATUS:</span>
-            <span className="text-emerald-400 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              All Systems Operational
-            </span>
+          
+          <p className="text-slate-400 text-xs leading-relaxed">
+            {tagline}
+          </p>
+
+          <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2 pt-2">
+            <a href="#" className="flex items-center gap-2 bg-[#1c2434] hover:bg-[#253046] border border-slate-700/60 text-white px-3 py-2 rounded-lg transition-colors">
+              <span className="text-xl">▶</span>
+              <div className="text-left">
+                <div className="text-[9px] uppercase tracking-wider text-slate-400">Get it on</div>
+                <div className="text-xs font-semibold leading-none">Google Play</div>
+              </div>
+            </a>
+            <a href="#" className="flex items-center gap-2 bg-[#1c2434] hover:bg-[#253046] border border-slate-700/60 text-white px-3 py-2 rounded-lg transition-colors">
+              <span className="text-xl">🍎</span>
+              <div className="text-left">
+                <div className="text-[9px] uppercase tracking-wider text-slate-400">Download on</div>
+                <div className="text-xs font-semibold leading-none">App Store</div>
+              </div>
+            </a>
           </div>
         </div>
 
-        {/* Links Grid */}
-        <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-8">
-          {/* Shop Column */}
-          <div>
-            <p className="font-mono-spec text-xs font-bold text-white uppercase tracking-widest mb-4 border-b border-white/10 pb-2">
-              SHOP
-            </p>
-            <ul className="text-sm flex flex-col gap-3 text-[--steel]">
-              <li>
-                <Link 
-                  href="/cart" 
-                  className="hover:text-white hover:translate-x-1 transition-all duration-150 inline-flex items-center gap-2"
-                >
-                  <span className="text-[--signal]">›</span> Cart
-                </Link>
-              </li>
-            </ul>
-          </div>
+        {/* Column 2: Category */}
+        <div>
+          <h3 className="text-white font-semibold text-base mb-4 pb-2 border-b border-dashed border-slate-700/60">
+            Category
+          </h3>
+          <ul className="space-y-2.5 text-slate-400 text-xs">
+            <li><Link href="/category/components" className="hover:text-emerald-400 transition-colors">Components</Link></li>
+            <li><Link href="/category/accessories" className="hover:text-emerald-400 transition-colors">Accessories</Link></li>
+            <li><Link href="/category/microcontrollers" className="hover:text-emerald-400 transition-colors">Microcontrollers</Link></li>
+            <li><Link href="/category/3d-printers" className="hover:text-emerald-400 transition-colors">3D Printers</Link></li>
+            <li><Link href="/category/rc-hobby" className="hover:text-emerald-400 transition-colors">RC Hobby</Link></li>
+            <li><Link href="/category/diy-robot" className="hover:text-emerald-400 transition-colors">DIY Robot</Link></li>
+          </ul>
+        </div>
 
-          {/* Support Column */}
-          <div>
-            <p className="font-mono-spec text-xs font-bold text-white uppercase tracking-widest mb-4 border-b border-white/10 pb-2">
-              SUPPORT
-            </p>
-            <ul className="text-sm flex flex-col gap-3 text-[--steel]">
-              <li>
-                <Link 
-                  href="#" 
-                  className="hover:text-white hover:translate-x-1 transition-all duration-150 inline-flex items-center gap-2"
-                >
-                  <span className="text-[--signal]">›</span> Returns
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="#" 
-                  className="hover:text-white hover:translate-x-1 transition-all duration-150 inline-flex items-center gap-2"
-                >
-                  <span className="text-[--signal]">›</span> Warranty
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="#" 
-                  className="hover:text-white hover:translate-x-1 transition-all duration-150 inline-flex items-center gap-2"
-                >
-                  <span className="text-[--signal]">›</span> Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
+        {/* Column 3: Company */}
+        <div>
+          <h3 className="text-white font-semibold text-base mb-4 pb-2 border-b border-dashed border-slate-700/60">
+            Company
+          </h3>
+          <ul className="space-y-2.5 text-slate-400 text-xs">
+            <li><Link href="/about" className="hover:text-emerald-400 transition-colors">About us</Link></li>
+            <li><Link href="/warranty" className="hover:text-emerald-400 transition-colors">Warranty Policy</Link></li>
+            <li><Link href="/faq" className="hover:text-emerald-400 transition-colors">FAQ</Link></li>
+            <li><Link href="/terms" className="hover:text-emerald-400 transition-colors">Terms of use</Link></li>
+            <li><Link href="/project" className="hover:text-emerald-400 transition-colors">Project</Link></li>
+            <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Contact us</Link></li>
+          </ul>
+        </div>
 
-          {/* Payment Gateways Column */}
-          <div>
-            <p className="font-mono-spec text-xs font-bold text-white uppercase tracking-widest mb-4 border-b border-white/10 pb-2">
-              PAY WITH
-            </p>
-            <div className="grid grid-cols-2 gap-2 text-xs font-mono-spec">
-              {["bKash", "Nagad", "Rocket", "SSLCommerz"].map((gateway) => (
-                <div 
-                  key={gateway}
-                  className="px-3 py-2 rounded bg-white/[0.04] border border-white/10 text-slate-300 hover:border-[--signal] hover:text-white transition-colors duration-200 text-center"
-                >
-                  {gateway}
-                </div>
-              ))}
-            </div>
+        {/* Column 4: Account */}
+        <div>
+          <h3 className="text-white font-semibold text-base mb-4 pb-2 border-b border-dashed border-slate-700/60">
+            Account
+          </h3>
+          <ul className="space-y-2.5 text-slate-400 text-xs">
+            <li><Link href="/signin" className="hover:text-emerald-400 transition-colors">Sign In</Link></li>
+            <li><Link href="/cart" className="hover:text-emerald-400 transition-colors">View Cart</Link></li>
+            <li><Link href="/privacy" className="hover:text-emerald-400 transition-colors">Privacy Policy</Link></li>
+            <li><Link href="/returns" className="hover:text-emerald-400 transition-colors">Return Policy</Link></li>
+            <li><Link href="/shipping" className="hover:text-emerald-400 transition-colors">Shipping Policy</Link></li>
+            <li><Link href="/payments" className="hover:text-emerald-400 transition-colors">Payments</Link></li>
+          </ul>
+        </div>
+
+        {/* Column 5: Contact & Socials */}
+        <div>
+          <h3 className="text-white font-semibold text-base mb-4 pb-2 border-b border-dashed border-slate-700/60">
+            Contact
+          </h3>
+          <ul className="space-y-3 text-slate-400 text-xs">
+            <li className="flex items-start gap-2">
+              <span className="text-slate-500 mt-0.5">📍</span>
+              <span>Shop 440 & 441, 3rd Floor, Farmview SuperMarket, Farmgate, Dhaka 1215</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-slate-500">💬</span>
+              <span>+8801717062205 (Info)</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-slate-500">💬</span>
+              <span>+8801641757175 (Store)</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-slate-500">💬</span>
+              <span>+8801919646416 (Delivery)</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-slate-500">✉️</span>
+              <span>info@electronics.com.bd</span>
+            </li>
+          </ul>
+
+          {/* Social Icons Bar */}
+          <div className="flex items-center gap-2 mt-6">
+            {["f", "yt", "ig", "in", "X", "p"].map((icon, i) => (
+              <a
+                key={i}
+                href="#"
+                className="w-7 h-7 rounded-full bg-[#1c2434] hover:bg-emerald-500 hover:text-white flex items-center justify-center text-xs font-bold text-slate-300 transition-colors"
+              >
+                {icon}
+              </a>
+            ))}
           </div>
         </div>
 
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-[--line]/60 bg-black/40 py-6 text-center font-mono-spec text-xs text-[--steel]">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} TechNova. ALL RIGHTS RESERVED.</p>
-          <p className="text-[10px] tracking-widest text-[--steel]/60 uppercase">
-            Designed for High-Performance Tech Commerce
+      {/* Bottom Legal & Payment Bar */}
+      <div className="border-t border-slate-800 bg-[#0e131d] py-4">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+          <p>
+            Copyright © {new Date().getFullYear()} <span className="text-amber-500 font-semibold">TechNova.Com.BD</span> all rights reserved.
           </p>
+
+          {/* Payment Cards Badges */}
+          <div className="flex flex-wrap items-center gap-1.5 font-bold text-[10px]">
+            <span className="px-2 py-1 bg-white text-blue-900 rounded italic font-black">VISA</span>
+            <span className="px-2 py-1 bg-white text-red-600 rounded">mastercard</span>
+            <span className="px-2 py-1 bg-white text-blue-600 rounded italic">PayPal</span>
+            <span className="px-2 py-1 bg-white text-pink-700 rounded">Skrill</span>
+            <span className="px-2 py-1 bg-white text-blue-800 rounded">maestro</span>
+            <span className="px-2 py-1 bg-white text-blue-500 rounded">VISA Electron</span>
+          </div>
         </div>
       </div>
     </footer>
