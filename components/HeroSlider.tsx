@@ -53,7 +53,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
             <p className="mt-4 text-white/70 max-w-md">{slide.description}</p>
           )}
           {slide.ctaText && (
-            
+           <a 
               href={slide.ctaLink || "#"}
               className="inline-block mt-6 bg-[--signal] text-white px-7 py-3 rounded-full font-semibold hover:bg-white hover:text-[--ink] transition"
             >
