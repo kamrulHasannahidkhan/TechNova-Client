@@ -1,97 +1,184 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 
-interface Product {
-  _id: string;
-  name: string;
-  price: number;
-  stock?: number;
-  images?: string[];
-}
+export default function CartPage() {
+  const {
+    items,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    total,
+    itemCount,
+    isHydrated,
+  } = useCart();
 
-export default function AddToCartButton({ product }: { product: Product }) {
-  const { addToCart } = useCart();
-  const [added, setAdded] = useState(false);
-  const [isAdding, setIsAdding] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const shippingCost = items.length > 0 ? 100 : 0;
+  const grandTotal = total + shippingCost;
 
-  const isOutOfStock = product.stock !== undefined && product.stock <= 0;
-
-  // Cleanup pending state timeouts on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
-  const handleClick = async () => {
-    if (isOutOfStock || isAdding || added) return;
-
-    setIsAdding(true);
-
-    // Tactile feedback delay
-    await new Promise((resolve) => setTimeout(resolve, 250));
-
-    addToCart({
-      _id: product._id,
-      name: product.name,
-      price: product.price,
-      image: product.images?.[0],
-    });
-
-    setIsAdding(false);
-    setAdded(true);
-
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setAdded(false), 2000);
-  };
+  if (!isHydrated) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-16 text-center text-[--steel]">
+        Loading cart...
+      </div>
+    );
+  }
 
   return (
-    <button
-      onClick={handleClick}
-      disabled={isOutOfStock || isAdding}
-      aria-label={isOutOfStock ? "Product sold out" : `Add ${product.name} to cart`}
-      className={`relative w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 active:scale-[0.97] focus:outline-none focus-visible:ring-2 focus-visible:ring-[--signal] focus-visible:ring-offset-2 select-none shadow-sm ${
-        isOutOfStock
-          ? "bg-[--surface-subtle] text-[--steel] border border-[--line] cursor-not-allowed opacity-60 shadow-none"
-          : added
-          ? "bg-emerald-600 text-white shadow-emerald-500/20 shadow-lg scale-[1.01]"
-          : "bg-[--ink] text-[--paper] hover:bg-[--signal] hover:shadow-lg hover:shadow-[--signal]/25"
-      }`}
-    >
-      {/* Dynamic Feedback States */}
-      {isAdding ? (
-        <span className="flex items-center gap-2">
-          <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
-          Adding...
-        </span>
-      ) : added ? (
-        <span className="flex items-center gap-2 animate-in zoom-in-95 duration-200">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-          </svg>
-          Added to Cart!
-        </span>
-      ) : isOutOfStock ? (
-        <span className="flex items-center gap-2">
-          <svg className="w-4 h-4 opacity-70" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-          </svg>
-          Out of Stock
-        </span>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 font-sans">
+      {/* Header */}
+      <div className="flex items-end justify-between pb-6 mb-8 border-b border-[--line]">
+        <div>
+          <span className="text-xs font-bold uppercase tracking-widest text-[--signal]">
+            Checkout Ready
+          </span>
+          <h1 className="font-display text-3xl sm:text-4xl font-black text-[--ink] mt-1">
+            Shopping Cart ({itemCount})
+          </h1>
+        </div>
+        {items.length > 0 && (
+          <button
+            onClick={clearCart}
+            className="text-xs font-semibold text-rose-500 hover:text-rose-600 underline underline-offset-4 transition"
+          >
+            Clear All Items
+          </button>
+        )}
+      </div>
+
+      {items.length === 0 ? (
+        <div className="text-center py-20 bg-[--surface-subtle] border border-[--line] rounded-3xl space-y-4">
+          <div className="text-4xl">🛒</div>
+          <h2 className="text-lg font-bold text-[--ink]">Your cart is empty</h2>
+          <p className="text-xs text-[--steel]">
+            Looks like you haven't added anything to your cart yet.
+          </p>
+          <Link
+            href="/"
+            className="inline-block px-6 py-2.5 rounded-full bg-[--signal] text-white text-xs font-bold hover:opacity-90 transition"
+          >
+            Start Shopping
+          </Link>
+        </div>
       ) : (
-        <span className="flex items-center gap-2">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993z" />
-          </svg>
-          Add to Cart
-        </span>
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          {/* Left Side: Product List */}
+          <div className="lg:col-span-8 space-y-4">
+            {items.map((item) => (
+              <div
+                key={item._id}
+                className="bg-[--surface-subtle] border border-[--line] rounded-2xl p-4 sm:p-5 flex gap-4 sm:gap-6 items-center justify-between shadow-sm transition-all hover:border-[--line]"
+              >
+                {/* Product Image */}
+                <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-slate-50 dark:bg-slate-900 border border-[--line] rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center">
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      className="object-contain p-2"
+                    />
+                  ) : (
+                    <span className="text-[10px] text-[--steel]">No image</span>
+                  )}
+                </div>
+
+                {/* Details & Controls */}
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-bold text-sm sm:text-base text-[--ink] truncate">
+                      {item.name}
+                    </h3>
+                    <button
+                      onClick={() => removeFromCart(item._id)}
+                      className="text-[--steel] hover:text-rose-500 p-1 transition"
+                      aria-label="Remove item"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+
+                  <p className="text-xs font-semibold text-[--steel]">
+                    ৳{item.price.toLocaleString()} each
+                  </p>
+
+                  {/* Quantity Selector */}
+                  <div className="flex items-center gap-2 pt-1">
+                    <div className="inline-flex items-center border border-[--line] rounded-lg bg-[--paper] overflow-hidden">
+                      <button
+                        onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                        className="px-3 py-1 text-sm font-bold text-[--steel] hover:text-[--ink] hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                      >
+                        -
+                      </button>
+                      <span className="px-3 text-xs font-extrabold text-[--ink]">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                        className="px-3 py-1 text-sm font-bold text-[--steel] hover:text-[--ink] hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Subtotal Item Price */}
+                <div className="text-right flex-shrink-0 self-center">
+                  <span className="text-base sm:text-lg font-black text-[--ink]">
+                    ৳{(item.price * item.quantity).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Right Side: Order Summary Card */}
+          <div className="lg:col-span-4 bg-[--surface-subtle] border border-[--line] rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm sticky top-6">
+            <h2 className="text-xs font-extrabold uppercase tracking-widest text-[--steel] border-b border-[--line] pb-4">
+              Order Summary
+            </h2>
+
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between text-[--steel]">
+                <span>Subtotal</span>
+                <span className="font-bold text-[--ink]">৳{total.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-[--steel]">
+                <span>Estimated Shipping</span>
+                <span className="font-bold text-[--ink]">৳{shippingCost}</span>
+              </div>
+            </div>
+
+            <div className="border-t border-[--line] pt-4 flex justify-between items-baseline">
+              <span className="text-base font-bold text-[--ink]">Total</span>
+              <span className="text-2xl font-black text-[--ink]">
+                ৳{grandTotal.toLocaleString()}
+              </span>
+            </div>
+
+            <Link
+              href="/checkout"
+              className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-[--signal] text-white font-bold text-sm hover:opacity-95 transition shadow-md active:scale-[0.98]"
+            >
+              Proceed to Checkout →
+            </Link>
+
+            {/* Guaranteed Delivery Notice */}
+            <div className="p-4 rounded-xl bg-[--paper] border border-[--line] space-y-1">
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                <span>✓</span> Guaranteed Delivery
+              </div>
+              <p className="text-[11px] text-[--steel] leading-tight">
+                Orders placed before 4:00 PM ship out the same day.
+              </p>
+            </div>
+          </div>
+        </div>
       )}
-    </button>
+    </div>
   );
 }
