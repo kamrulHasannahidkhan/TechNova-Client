@@ -1,18 +1,43 @@
 @import "tailwindcss";
 
 :root {
+  /* Brand Color System */
   --ink: #14151a;
-  --paper: #f5f4f0;
-  --signal: #2d5bff;
-  --steel: #6b7280;
-  --line: #e2e0d9;
+  --paper: #f8fafc;
+  --signal: #2563eb;
+  --steel: #64748b;
+  --line: #e2e8f0;
+
+  /* Theme Accents & Surface Variants */
+  --surface-subtle: #ffffff;
+  --surface-dark: #0f172a;
+  --accent-gold: #f59e0b;
+  --accent-gold-hover: #d97706;
 }
 
+/* Dark Mode Overrides */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #f8fafc;
+    --paper: #0b0f17;
+    --signal: #3b82f6;
+    --steel: #94a3b8;
+    --line: #1e293b;
+    --surface-subtle: #121824;
+  }
+}
+
+/* Base Body Styles */
 body {
   background: var(--paper);
   color: var(--ink);
+  font-family: var(--font-inter, system-ui), -apple-system, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Typography Utility Classes */
 .font-display {
   font-family: var(--font-space-grotesk), sans-serif;
 }
@@ -21,15 +46,63 @@ body {
   font-family: var(--font-jetbrains-mono), monospace;
 }
 
+/* Smooth Scrolling & Selection */
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: var(--signal);
+  color: #ffffff;
+}
+
+/* Infinite Ticker Animation */
 @keyframes ticker {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .ticker-track {
+  display: flex;
+  width: max-content;
   animation: ticker 22s linear infinite;
+  will-change: transform;
 }
 
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* Custom High-Tech Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--steel);
+}
+
+/* Reduced Motion Safeguard */
 @media (prefers-reduced-motion: reduce) {
-  .ticker-track { animation: none; }
+  .ticker-track {
+    animation: none;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
 }
