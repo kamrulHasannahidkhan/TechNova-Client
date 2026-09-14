@@ -13,6 +13,11 @@ async function fetchWithRetry(url: string, retries = 3) {
   return null;
 }
 
+export async function getContentBlocksBySection(section: string) {
+  const data = await fetchWithRetry(`${API_URL}/content?section=${section}`);
+  return data || [];
+}
+
 export async function getContentBySection(section: string) {
   const data = await fetchWithRetry(`${API_URL}/content?section=${section}`);
   return data?.[0] || null;
