@@ -1,8 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { submitOrder } from "@/lib/api";
+
+const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
 
 const SHIPPING_OPTIONS = [
   { key: "inside", label: "Inside Dhaka City", price: 70 },
@@ -10,8 +13,11 @@ const SHIPPING_OPTIONS = [
   { key: "free", label: "Free Delivery", price: 0 },
 ];
 
+type SavedAddress = { _id: string; label: string; fullName: string; phone: string; address: string; district: string };
+
 export default function CheckoutPage() {
   const { items, total, clearCart, isHydrated } = useCart();
+  const { user, token } = useAuth();
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -23,10 +29,36 @@ export default function CheckoutPage() {
     district: "",
     notes: "",
   });
+  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [shipping, setShipping] = useState("inside");
   const [createAccount, setCreateAccount] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [placed, setPlaced] = useState(false);
+
+  // Prefill email for logged-in users, and load their saved addresses.
+  useEffect(() => {
+    if (!user || !token) return;
+    setForm((f) => ({ ...f, email: user.email }));
+
+    fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.addresses) setSavedAddresses(data.addresses);
+      })
+      .catch(() => {});
+  }, [user, token]);
+
+  const useAddress = (addr: SavedAddress) => {
+    setForm((f) => ({
+      ...f,
+      fullName: addr.fullName,
+      phone: addr.phone,
+      address: addr.address,
+      district: addr.district,
+    }));
+    setSelectedAddressId(addr._id);
+  };
 
   if (!isHydrated) return null;
 
@@ -98,13 +130,37 @@ export default function CheckoutPage() {
 
       <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-8 items-start">
         <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-5">
+          {user && savedAddresses.length > 0 && (
+            <div>
+              <p className="text-sm font-semibold text-gray-900 mb-2">Use a saved address</p>
+              <div className="flex flex-col gap-2 mb-2">
+                {savedAddresses.map((addr) => (
+                  <button
+                    key={addr._id}
+                    type="button"
+                    onClick={() => useAddress(addr)}
+                    className={`text-left border rounded-lg px-3.5 py-2.5 text-sm transition ${
+                      selectedAddressId === addr._id
+                        ? "border-black bg-gray-50"
+                        : "border-gray-300 hover:border-gray-400"
+                    }`}
+                  >
+                    <span className="font-semibold">{addr.label}</span> — {addr.fullName}, {addr.address}, {addr.district}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-400">Or fill in a different address below.</p>
+              <hr className="border-gray-200 mt-3" />
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-semibold text-gray-900 mb-1.5">Full Name *</label>
             <input
               required
               className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition"
               value={form.fullName}
-              onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+              onChange={(e) => { setForm({ ...form, fullName: e.target.value }); setSelectedAddressId(null); }}
             />
           </div>
 
@@ -115,7 +171,7 @@ export default function CheckoutPage() {
               placeholder="Enter your 11-digit mobile number."
               className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition"
               value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              onChange={(e) => { setForm({ ...form, phone: e.target.value }); setSelectedAddressId(null); }}
             />
           </div>
 
@@ -148,7 +204,7 @@ export default function CheckoutPage() {
               placeholder="Enter your Full Address"
               className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition"
               value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
+              onChange={(e) => { setForm({ ...form, address: e.target.value }); setSelectedAddressId(null); }}
             />
           </div>
 
@@ -158,7 +214,7 @@ export default function CheckoutPage() {
               required
               className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition"
               value={form.district}
-              onChange={(e) => setForm({ ...form, district: e.target.value })}
+              onChange={(e) => { setForm({ ...form, district: e.target.value }); setSelectedAddressId(null); }}
             >
               <option value="">Select your District</option>
               <option>Dhaka</option>
@@ -172,10 +228,12 @@ export default function CheckoutPage() {
             </select>
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-gray-700">
-            <input type="checkbox" checked={createAccount} onChange={(e) => setCreateAccount(e.target.checked)} />
-            Create an account?
-          </label>
+          {!user && (
+            <label className="flex items-center gap-2 text-sm text-gray-700">
+              <input type="checkbox" checked={createAccount} onChange={(e) => setCreateAccount(e.target.checked)} />
+              Create an account?
+            </label>
+          )}
 
           <div className="pt-2">
             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-2">Additional Information</h3>
