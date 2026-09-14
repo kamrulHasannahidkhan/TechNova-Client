@@ -20,11 +20,23 @@ export default function Header() {
           <Link href="/exclusive" className="hover:text-[--ink] transition">Exclusive</Link>
           <Link href="/best-sellers" className="hover:text-[--ink] transition">Best Sellers</Link>
         </nav>
-        <div className="flex items-center gap-5">
-          <Link href={user ? "/account" : "/signin"} className="text-sm font-medium">
-            {user ? user.name.split(" ")[0] : "Sign In"}
-          </Link>
-          <Link href="/cart" className="relative font-medium text-sm">
+        <div className="flex items-center gap-4 text-sm font-medium">
+          {user ? (
+            <Link href="/account" className="hover:text-[--signal] transition">
+              {user.name.split(" ")[0]}
+            </Link>
+          ) : (
+            <>
+              <Link href="/signin" className="hover:text-[--signal] transition">Sign In</Link>
+              <Link
+                href="/signup"
+                className="bg-[--ink] text-white px-3.5 py-1.5 rounded-lg hover:bg-[--signal] transition"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
+          <Link href="/cart" className="relative">
             Cart
             {count > 0 && (
               <span className="absolute -top-2 -right-4 bg-[--signal] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
