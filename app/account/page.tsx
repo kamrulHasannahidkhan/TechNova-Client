@@ -13,6 +13,7 @@ export default function AccountPage() {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [form, setForm] = useState({ label: "Home", fullName: "", phone: "", address: "", district: "" });
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (isReady && !user) router.push("/signin");
@@ -20,10 +21,14 @@ export default function AccountPage() {
 
   const loadAddresses = async () => {
     if (!token) return;
-    const res = await fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } });
-    if (res.ok) {
-      const data = await res.json();
-      setAddresses(data.addresses || []);
+    try {
+      const res = await fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const data = await res.json();
+        setAddresses(data.addresses || []);
+      }
+    } catch {
+      // ignore, list just won't refresh this time
     }
   };
 
@@ -32,22 +37,33 @@ export default function AccountPage() {
   const handleAddAddress = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    await fetch(`${API_URL}/addresses`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(form),
-    });
-    setForm({ label: "Home", fullName: "", phone: "", address: "", district: "" });
-    setSaving(false);
-    loadAddresses();
+    setError("");
+    try {
+      const res = await fetch(`${API_URL}/addresses`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Failed to save address");
+      setForm({ label: "Home", fullName: "", phone: "", address: "", district: "" });
+      await loadAddresses();
+    } catch {
+      setError("Could not save address — please try again.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDeleteAddress = async (id: string) => {
-    await fetch(`${API_URL}/addresses/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    loadAddresses();
+    try {
+      await fetch(`${API_URL}/addresses/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      loadAddresses();
+    } catch {
+      // ignore
+    }
   };
 
   if (!isReady || !user) return null;
@@ -78,6 +94,7 @@ export default function AccountPage() {
       </div>
 
       <h3 className="font-semibold mb-2">Add new address</h3>
+      {error && <p className="text-red-600 text-sm mb-2">{error}</p>}
       <form onSubmit={handleAddAddress} className="border border-gray-200 rounded-xl p-4 flex flex-col gap-2.5">
         <input className="border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Label (e.g. Home, Office)"
           value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} />
@@ -89,7 +106,7 @@ export default function AccountPage() {
           value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
         <input required className="border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="District"
           value={form.district} onChange={(e) => setForm({ ...form, district: e.target.value })} />
-        <button disabled={saving} className="bg-black text-white font-semibold py-2 rounded-lg text-sm mt-1">
+        <button disabled={saving} className="bg-black text-white font-semibold py-2 rounded-lg text-sm mt-1 disabled:opacity-50">
           {saving ? "Saving..." : "Save Address"}
         </button>
       </form>
