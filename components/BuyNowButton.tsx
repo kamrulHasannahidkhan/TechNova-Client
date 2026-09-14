@@ -1,5 +1,6 @@
 "use client";
 import { useCart } from "@/context/CartContext";
+import { logCartAdd } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 export default function BuyNowButton({ product }: { product: any }) {
@@ -13,6 +14,7 @@ export default function BuyNowButton({ product }: { product: any }) {
       price: product.price,
       image: product.images?.[0],
     });
+    logCartAdd({ productId: product._id, name: product.name, price: product.price, quantity: 1 });
     router.push("/checkout");
   };
 

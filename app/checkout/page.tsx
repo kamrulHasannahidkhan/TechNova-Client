@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { submitOrder } from "@/lib/api";
 
 const SHIPPING_OPTIONS = [
   { key: "inside", label: "Inside Dhaka City", price: 70 },
@@ -44,14 +45,32 @@ export default function CheckoutPage() {
   const shippingCost = SHIPPING_OPTIONS.find((s) => s.key === shipping)?.price ?? 0;
   const grandTotal = total + shippingCost;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setPlacing(true);
-    setTimeout(() => {
-      setPlacing(false);
+    try {
+      await submitOrder({
+        items: items.map((i) => ({ productId: i._id, name: i.name, price: i.price, quantity: i.quantity })),
+        customer: {
+          fullName: form.fullName,
+          phone: form.phone,
+          email: form.email,
+          address: form.address,
+          district: form.district,
+          notes: form.notes,
+        },
+        shippingOption: SHIPPING_OPTIONS.find((s) => s.key === shipping)?.label,
+        shippingCost,
+        subtotal: total,
+        total: grandTotal,
+      });
       setPlaced(true);
       clearCart();
-    }, 800);
+    } catch {
+      alert("Something went wrong placing your order. Please try again.");
+    } finally {
+      setPlacing(false);
+    }
   };
 
   if (placed) {
@@ -78,7 +97,6 @@ export default function CheckoutPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-8 items-start">
-        {/* Left: form */}
         <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-5">
           <div>
             <label className="block text-sm font-semibold text-gray-900 mb-1.5">Full Name *</label>
@@ -172,7 +190,6 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* Right: order summary */}
         <div className="bg-white border border-gray-200 rounded-2xl p-6 sticky top-6">
           <h2 className="font-display font-bold text-lg text-gray-900 mb-4">YOUR ORDER</h2>
 

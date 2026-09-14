@@ -13,11 +13,6 @@ async function fetchWithRetry(url: string, retries = 3) {
   return null;
 }
 
-export async function getContentBlocksBySection(section: string) {
-  const data = await fetchWithRetry(`${API_URL}/content?section=${section}`);
-  return data || [];
-}
-
 export async function getContentBySection(section: string) {
   const data = await fetchWithRetry(`${API_URL}/content?section=${section}`);
   return data?.[0] || null;
@@ -41,4 +36,29 @@ export async function getProductsByTag(tag: string) {
 export async function getPerks() {
   const data = await fetchWithRetry(`${API_URL}/perks`);
   return data || [];
+}
+
+export async function logCartAdd(item: { productId: string; name: string; price: number; quantity: number }) {
+  try {
+    await fetch(`${API_URL}/orders`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        status: "cart",
+        items: [{ productId: item.productId, name: item.name, price: item.price, quantity: item.quantity }],
+      }),
+    });
+  } catch {
+    // best-effort, never block the UI
+  }
+}
+
+export async function submitOrder(payload: any) {
+  const res = await fetch(`${API_URL}/orders`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...payload, status: "ordered" }),
+  });
+  if (!res.ok) throw new Error("Failed to place order");
+  return res.json();
 }

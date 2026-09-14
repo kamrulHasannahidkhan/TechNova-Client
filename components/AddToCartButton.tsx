@@ -1,5 +1,6 @@
 "use client";
 import { useCart } from "@/context/CartContext";
+import { logCartAdd } from "@/lib/api";
 import { useState } from "react";
 
 export default function AddToCartButton({ product }: { product: any }) {
@@ -13,6 +14,7 @@ export default function AddToCartButton({ product }: { product: any }) {
       price: product.price,
       image: product.images?.[0],
     });
+    logCartAdd({ productId: product._id, name: product.name, price: product.price, quantity: 1 });
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
