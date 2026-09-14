@@ -1,16 +1,10 @@
 "use client";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { useAuth } from "./AuthContext";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-  ReactNode,
-} from "react";
+const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
 
-export type CartItem = {
+type CartItem = {
   _id: string;
   name: string;
   price: number;
@@ -25,128 +19,91 @@ type CartContextType = {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   total: number;
-  itemCount: number;
-  isCartOpen: boolean;
-  openCart: () => void;
-  closeCart: () => void;
-  toggleCart: () => void;
   isHydrated: boolean;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
 
-const STORAGE_KEY = "store_cart_v1";
-
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { token, isReady } = useAuth();
   const [items, setItems] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // 1. Safe Client Hydration from localStorage
+  // Load cart: from server if logged in, else from sessionStorage.
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        setItems(JSON.parse(saved));
-      }
-    } catch (error) {
-      console.error("Failed to load cart from storage:", error);
-    } finally {
-      setIsHydrated(true);
-    }
-  }, []);
+    if (!isReady) return;
 
-  // 2. Persist to localStorage whenever cart changes
+    const load = async () => {
+      if (token) {
+        try {
+          const res = await fetch(`${API_URL}/cart`, { headers: { Authorization: `Bearer ${token}` } });
+          if (res.ok) {
+            const serverCart = await res.json();
+            setItems(serverCart.map((i: any) => ({ _id: i.productId, name: i.name, price: i.price, image: i.image, quantity: i.quantity })));
+            setIsHydrated(true);
+            return;
+          }
+        } catch {
+          // fall through to local
+        }
+      }
+      const saved = sessionStorage.getItem("cart");
+      setItems(saved ? JSON.parse(saved) : []);
+      setIsHydrated(true);
+    };
+
+    load();
+  }, [isReady, token]);
+
+  // Persist cart: to server if logged in, else sessionStorage.
   useEffect(() => {
     if (!isHydrated) return;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch (error) {
-      console.error("Failed to save cart to storage:", error);
+
+    if (token) {
+      fetch(`${API_URL}/cart`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          cart: items.map((i) => ({ productId: i._id, name: i.name, price: i.price, image: i.image, quantity: i.quantity })),
+        }),
+      }).catch(() => {});
+    } else {
+      sessionStorage.setItem("cart", JSON.stringify(items));
     }
-  }, [items, isHydrated]);
+  }, [items, token, isHydrated]);
 
-  // Cart Actions
-  const addToCart = useCallback((product: Omit<CartItem, "quantity">) => {
+  const addToCart = (item: Omit<CartItem, "quantity">) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i._id === product._id);
+      const existing = prev.find((i) => i._id === item._id);
       if (existing) {
-        return prev.map((i) =>
-          i._id === product._id ? { ...i, quantity: i.quantity + 1 } : i
-        );
+        return prev.map((i) => (i._id === item._id ? { ...i, quantity: i.quantity + 1 } : i));
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { ...item, quantity: 1 }];
     });
-    setIsCartOpen(true); // Automatically open drawer when item is added
-  }, []);
+  };
 
-  const removeFromCart = useCallback((id: string) => {
+  const removeFromCart = (id: string) => {
     setItems((prev) => prev.filter((i) => i._id !== id));
-  }, []);
+  };
 
-  const updateQuantity = useCallback((id: string, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return removeFromCart(id);
-    setItems((prev) =>
-      prev.map((i) => (i._id === id ? { ...i, quantity } : i))
-    );
-  }, [removeFromCart]);
+    setItems((prev) => prev.map((i) => (i._id === id ? { ...i, quantity } : i)));
+  };
 
-  const clearCart = useCallback(() => setItems([]), []);
+  const clearCart = () => setItems([]);
 
-  // Drawer Toggles
-  const openCart = useCallback(() => setIsCartOpen(true), []);
-  const closeCart = useCallback(() => setIsCartOpen(false), []);
-  const toggleCart = useCallback(() => setIsCartOpen((prev) => !prev), []);
+  const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
-  // Calculated Totals
-  const total = useMemo(
-    () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
-    [items]
+  return (
+    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, total, isHydrated }}>
+      {children}
+    </CartContext.Provider>
   );
-
-  const itemCount = useMemo(
-    () => items.reduce((sum, i) => sum + i.quantity, 0),
-    [items]
-  );
-
-  const value = useMemo(
-    () => ({
-      items: isHydrated ? items : [],
-      addToCart,
-      removeFromCart,
-      updateQuantity,
-      clearCart,
-      total,
-      itemCount: isHydrated ? itemCount : 0,
-      isCartOpen,
-      openCart,
-      closeCart,
-      toggleCart,
-      isHydrated,
-    }),
-    [
-      items,
-      addToCart,
-      removeFromCart,
-      updateQuantity,
-      clearCart,
-      total,
-      itemCount,
-      isCartOpen,
-      openCart,
-      closeCart,
-      toggleCart,
-      isHydrated,
-    ]
-  );
-
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
 export function useCart() {
   const ctx = useContext(CartContext);
-  if (!ctx) {
-    throw new Error("useCart must be used within a CartProvider");
-  }
+  if (!ctx) throw new Error("useCart must be used within CartProvider");
   return ctx;
 }

@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Header() {
   const { items } = useCart();
+  const { user } = useAuth();
   const count = items.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
@@ -18,14 +20,19 @@ export default function Header() {
           <Link href="/exclusive" className="hover:text-[--ink] transition">Exclusive</Link>
           <Link href="/best-sellers" className="hover:text-[--ink] transition">Best Sellers</Link>
         </nav>
-        <Link href="/cart" className="relative font-medium text-sm">
-          Cart
-          {count > 0 && (
-            <span className="absolute -top-2 -right-4 bg-[--signal] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {count}
-            </span>
-          )}
-        </Link>
+        <div className="flex items-center gap-5">
+          <Link href={user ? "/account" : "/signin"} className="text-sm font-medium">
+            {user ? user.name.split(" ")[0] : "Sign In"}
+          </Link>
+          <Link href="/cart" className="relative font-medium text-sm">
+            Cart
+            {count > 0 && (
+              <span className="absolute -top-2 -right-4 bg-[--signal] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {count}
+              </span>
+            )}
+          </Link>
+        </div>
       </div>
     </header>
   );

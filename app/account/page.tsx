@@ -1,0 +1,98 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+
+const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
+
+type Address = { _id: string; label: string; fullName: string; phone: string; address: string; district: string };
+
+export default function AccountPage() {
+  const { user, token, isReady, logout } = useAuth();
+  const router = useRouter();
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [form, setForm] = useState({ label: "Home", fullName: "", phone: "", address: "", district: "" });
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (isReady && !user) router.push("/signin");
+  }, [isReady, user, router]);
+
+  const loadAddresses = async () => {
+    if (!token) return;
+    const res = await fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } });
+    if (res.ok) {
+      const data = await res.json();
+      setAddresses(data.addresses || []);
+    }
+  };
+
+  useEffect(() => { loadAddresses(); }, [token]);
+
+  const handleAddAddress = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    await fetch(`${API_URL}/addresses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(form),
+    });
+    setForm({ label: "Home", fullName: "", phone: "", address: "", district: "" });
+    setSaving(false);
+    loadAddresses();
+  };
+
+  const handleDeleteAddress = async (id: string) => {
+    await fetch(`${API_URL}/addresses/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    loadAddresses();
+  };
+
+  if (!isReady || !user) return null;
+
+  return (
+    <div className="max-w-2xl mx-auto px-6 py-12">
+      <div className="flex justify-between items-start mb-8">
+        <div>
+          <h1 className="font-display text-2xl font-bold">Hi, {user.name}</h1>
+          <p className="text-sm text-gray-500">{user.email}</p>
+        </div>
+        <button onClick={logout} className="text-sm text-red-600 font-medium">Sign out</button>
+      </div>
+
+      <h2 className="font-semibold text-lg mb-3">Saved Addresses</h2>
+      <div className="flex flex-col gap-3 mb-6">
+        {addresses.length === 0 && <p className="text-sm text-gray-500">No saved addresses yet.</p>}
+        {addresses.map((a) => (
+          <div key={a._id} className="border border-gray-200 rounded-xl p-4 flex justify-between items-start">
+            <div className="text-sm">
+              <p className="font-semibold">{a.label} — {a.fullName}</p>
+              <p className="text-gray-600">{a.phone}</p>
+              <p className="text-gray-600">{a.address}, {a.district}</p>
+            </div>
+            <button onClick={() => handleDeleteAddress(a._id)} className="text-xs text-red-600">Remove</button>
+          </div>
+        ))}
+      </div>
+
+      <h3 className="font-semibold mb-2">Add new address</h3>
+      <form onSubmit={handleAddAddress} className="border border-gray-200 rounded-xl p-4 flex flex-col gap-2.5">
+        <input className="border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Label (e.g. Home, Office)"
+          value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} />
+        <input required className="border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Full name"
+          value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} />
+        <input required className="border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Phone"
+          value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+        <input required className="border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="Address"
+          value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+        <input required className="border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="District"
+          value={form.district} onChange={(e) => setForm({ ...form, district: e.target.value })} />
+        <button disabled={saving} className="bg-black text-white font-semibold py-2 rounded-lg text-sm mt-1">
+          {saving ? "Saving..." : "Save Address"}
+        </button>
+      </form>
+    </div>
+  );
+}
