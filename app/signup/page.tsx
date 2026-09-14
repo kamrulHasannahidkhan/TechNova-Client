@@ -9,15 +9,23 @@ export default function SignUpPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
-    const res = await register(name, email, password);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    const res = await register(name, email, phone, password);
     setLoading(false);
     if (res.error) setError(res.error);
     else router.push("/account");
@@ -39,9 +47,19 @@ export default function SignUpPage() {
           value={email} onChange={(e) => setEmail(e.target.value)}
         />
         <input
+          type="tel" required placeholder="Phone number"
+          className="border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm"
+          value={phone} onChange={(e) => setPhone(e.target.value)}
+        />
+        <input
           type="password" required placeholder="Password" minLength={6}
           className="border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm"
           value={password} onChange={(e) => setPassword(e.target.value)}
+        />
+        <input
+          type="password" required placeholder="Re-enter password" minLength={6}
+          className="border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm"
+          value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
         />
         <button disabled={loading} className="bg-black text-white font-semibold py-2.5 rounded-lg mt-2 disabled:opacity-50">
           {loading ? "Creating account..." : "Sign Up"}

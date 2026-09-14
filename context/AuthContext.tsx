@@ -3,14 +3,14 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 
 const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
 
-type User = { id: string; name: string; email: string };
+type User = { id: string; name: string; email: string; phone?: string };
 
 type AuthContextType = {
   user: User | null;
   token: string | null;
   isReady: boolean;
   login: (email: string, password: string) => Promise<{ error?: string }>;
-  register: (name: string, email: string, password: string) => Promise<{ error?: string }>;
+  register: (name: string, email: string, phone: string, password: string) => Promise<{ error?: string }>;
   logout: () => void;
 };
 
@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${saved}` } })
         .then((r) => (r.ok ? r.json() : null))
         .then((u) => {
-          if (u) setUser({ id: u._id, name: u.name, email: u.email });
+          if (u) setUser({ id: u._id, name: u.name, email: u.email, phone: u.phone });
           else {
             localStorage.removeItem("auth_token");
             setToken(null);
@@ -54,11 +54,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return {};
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (name: string, email: string, phone: string, password: string) => {
     const res = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, phone, password }),
     });
     const data = await res.json();
     if (!res.ok) return { error: data.error || "Registration failed" };
