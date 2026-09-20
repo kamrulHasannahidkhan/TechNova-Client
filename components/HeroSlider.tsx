@@ -43,7 +43,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
 
   useEffect(() => {
     if (list.length <= 1 || isPaused) return;
-    const timer = setInterval(next, 4000);
+    const timer = setInterval(next, 2000);
     return () => clearInterval(timer);
   }, [next, list.length, isPaused]);
 
