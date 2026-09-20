@@ -5,10 +5,12 @@
   --color-ink: var(--ink);
   --color-paper: var(--paper);
   --color-signal: var(--signal);
+  --color-cyan-glow: var(--cyan-glow);
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
   --color-steel: var(--steel);
   --color-line: var(--line);
   --color-success: var(--success);
-  --color-accent-gold: var(--accent-gold);
   --color-surface-subtle: var(--surface-subtle);
   --color-surface-card: var(--surface-card);
   --color-surface-dark: var(--surface-dark);
@@ -17,32 +19,36 @@
   --font-mono-spec: var(--font-jetbrains-mono), monospace;
 }
 
-/* Light Theme Variables */
+/* Light Theme Variables (Electric Teal & Dark Gray Palette) */
 :root {
-  --ink: #0f172a;
-  --paper: #f8fafc;
-  --signal: #2563eb;
-  --steel: #64748b;
-  --line: #e2e8f0;
-  --success: #10b981;
-  --accent-gold: #f59e0b;
-  --surface-subtle: #f1f5f9;
-  --surface-card: #ffffff;
-  --surface-dark: #0f172a;
+  --paper: #F9FAFB;            /* Crisp Light Gray */
+  --ink: #0F172A;              /* Midnight Navy */
+  --signal: #0EA5E9;           /* Electric Cyan / Teal */
+  --cyan-glow: #06B6D4;        /* Bright Teal Accent */
+  --cta: #6366F1;               /* Electric Indigo CTA */
+  --cta-hover: #4F46E5;         /* Darker Indigo Hover */
+  --steel: #475569;            /* Slate Gray */
+  --line: #E2E8F0;             /* Subtle Border */
+  --success: #10B981;          /* Emerald Success */
+  --surface-subtle: #F1F5F9;   /* Subtle Surface Background */
+  --surface-card: #FFFFFF;     /* Pure White Card Surface */
+  --surface-dark: #0F172A;     /* Midnight Dark Surface */
 }
 
 /* Dark Theme Overrides */
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #f8fafc;
-    --paper: #0b1220;
-    --signal: #3b82f6;
-    --steel: #94a3b8;
-    --line: #1e293b;
-    --success: #34d399;
-    --accent-gold: #fbbf24;
-    --surface-subtle: #0f172a;
-    --surface-card: #131c31;
+    --paper: #0B1220;
+    --ink: #F8FAFC;
+    --signal: #38BDF8;
+    --cyan-glow: #22D3EE;
+    --cta: #818CF8;
+    --cta-hover: #6366F1;
+    --steel: #94A3B8;
+    --line: #1E293B;
+    --success: #34D399;
+    --surface-subtle: #0F172A;
+    --surface-card: #131C31;
     --surface-dark: #020617;
   }
 }
@@ -85,7 +91,7 @@ body {
   animation-play-state: paused;
 }
 
-/* Accessibility: Accessibility reduced motion override */
+/* Accessibility: Reduced motion override */
 @media (prefers-reduced-motion: reduce) {
   .ticker-track {
     animation: none;
