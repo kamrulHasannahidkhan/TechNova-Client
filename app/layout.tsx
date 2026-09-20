@@ -13,7 +13,7 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jet
 export const metadata: Metadata = {
   title: "TechNova - Your One-Stop Tech Shop",
   description: "Ecommerce storefront",
-  MadeBy: "Kamrul Hasan",
+  
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
