@@ -1,14 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-
-const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
+import { useSession, signOut } from "next-auth/react";
 
 type Address = { _id: string; label: string; fullName: string; phone: string; address: string; district: string };
 
 export default function AccountPage() {
-  const { user, token, isReady, logout } = useAuth();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [form, setForm] = useState({ label: "Home", fullName: "", phone: "", address: "", district: "" });
@@ -16,35 +14,29 @@ export default function AccountPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (isReady && !user) router.push("/signin");
-  }, [isReady, user, router]);
+    if (status === "unauthenticated") router.push("/signin");
+  }, [status, router]);
 
   const loadAddresses = async () => {
-    if (!token) return;
     try {
-      const res = await fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } });
-      if (res.ok) {
-        const data = await res.json();
-        setAddresses(data.addresses || []);
-      }
-    } catch {
-      // ignore, list just won't refresh this time
-    }
+      const res = await fetch("/api/account/addresses-list");
+      if (res.ok) setAddresses(await res.json());
+    } catch {}
   };
 
-  useEffect(() => { loadAddresses(); }, [token]);
+  useEffect(() => { if (status === "authenticated") loadAddresses(); }, [status]);
 
   const handleAddAddress = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setError("");
     try {
-      const res = await fetch(`${API_URL}/addresses`, {
+      const res = await fetch("/api/addresses", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      if (!res.ok) throw new Error("Failed to save address");
+      if (!res.ok) throw new Error();
       setForm({ label: "Home", fullName: "", phone: "", address: "", district: "" });
       await loadAddresses();
     } catch {
@@ -55,27 +47,20 @@ export default function AccountPage() {
   };
 
   const handleDeleteAddress = async (id: string) => {
-    try {
-      await fetch(`${API_URL}/addresses/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      loadAddresses();
-    } catch {
-      // ignore
-    }
+    await fetch(`/api/addresses/${id}`, { method: "DELETE" });
+    loadAddresses();
   };
 
-  if (!isReady || !user) return null;
+  if (status !== "authenticated" || !session?.user) return null;
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-12">
       <div className="flex justify-between items-start mb-8">
         <div>
-          <h1 className="font-display text-2xl font-bold">Hi, {user.name}</h1>
-          <p className="text-sm text-gray-500">{user.email}</p>
+          <h1 className="font-display text-2xl font-bold">Hi, {session.user.name}</h1>
+          <p className="text-sm text-gray-500">{session.user.email}</p>
         </div>
-        <button onClick={logout} className="text-sm text-red-600 font-medium">Sign out</button>
+        <button onClick={() => signOut({ callbackUrl: "/" })} className="text-sm text-red-600 font-medium">Sign out</button>
       </div>
 
       <h2 className="font-semibold text-lg mb-3">Saved Addresses</h2>

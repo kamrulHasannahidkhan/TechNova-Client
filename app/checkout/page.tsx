@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import { submitOrder } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
@@ -17,7 +17,8 @@ type SavedAddress = { _id: string; label: string; fullName: string; phone: strin
 
 export default function CheckoutPage() {
   const { items, total, clearCart, isHydrated } = useCart();
-  const { user, token } = useAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -38,14 +39,12 @@ export default function CheckoutPage() {
 
   // Prefill email for logged-in users, and load their saved addresses.
   useEffect(() => {
-    if (!user || !token) return;
+    if (!user) return;
     setForm((f) => ({ ...f, email: user.email }));
 
-    fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
+    fetch("/api/account/addresses-list")
       .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data?.addresses) setSavedAddresses(data.addresses);
-      })
+      .then((data) => { if (Array.isArray(data)) setSavedAddresses(data); })
       .catch(() => {});
   }, [user, token]);
 

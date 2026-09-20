@@ -1,8 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { useAuth } from "./AuthContext";
-
-const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
+import { useSession } from "next-auth/react";
 
 type CartItem = {
   _id: string;
@@ -25,27 +23,24 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const { token, isReady } = useAuth();
+  const { data: session, status } = useSession();
   const [items, setItems] = useState<CartItem[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Load cart: from server if logged in, else from sessionStorage.
   useEffect(() => {
-    if (!isReady) return;
+    if (status === "loading") return;
 
     const load = async () => {
-      if (token) {
+      if (session?.user) {
         try {
-          const res = await fetch(`${API_URL}/cart`, { headers: { Authorization: `Bearer ${token}` } });
+          const res = await fetch("/api/cart");
           if (res.ok) {
             const serverCart = await res.json();
             setItems(serverCart.map((i: any) => ({ _id: i.productId, name: i.name, price: i.price, image: i.image, quantity: i.quantity })));
             setIsHydrated(true);
             return;
           }
-        } catch {
-          // fall through to local
-        }
+        } catch {}
       }
       const saved = sessionStorage.getItem("cart");
       setItems(saved ? JSON.parse(saved) : []);
@@ -53,16 +48,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     load();
-  }, [isReady, token]);
+  }, [status, session]);
 
-  // Persist cart: to server if logged in, else sessionStorage.
   useEffect(() => {
     if (!isHydrated) return;
 
-    if (token) {
-      fetch(`${API_URL}/cart`, {
+    if (session?.user) {
+      fetch("/api/cart", {
         method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           cart: items.map((i) => ({ productId: i._id, name: i.name, price: i.price, image: i.image, quantity: i.quantity })),
         }),
@@ -70,21 +64,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } else {
       sessionStorage.setItem("cart", JSON.stringify(items));
     }
-  }, [items, token, isHydrated]);
+  }, [items, session, isHydrated]);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setItems((prev) => {
       const existing = prev.find((i) => i._id === item._id);
-      if (existing) {
-        return prev.map((i) => (i._id === item._id ? { ...i, quantity: i.quantity + 1 } : i));
-      }
+      if (existing) return prev.map((i) => (i._id === item._id ? { ...i, quantity: i.quantity + 1 } : i));
       return [...prev, { ...item, quantity: 1 }];
     });
   };
 
-  const removeFromCart = (id: string) => {
-    setItems((prev) => prev.filter((i) => i._id !== id));
-  };
+  const removeFromCart = (id: string) => setItems((prev) => prev.filter((i) => i._id !== id));
 
   const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return removeFromCart(id);
@@ -92,7 +82,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const clearCart = () => setItems([]);
-
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   return (

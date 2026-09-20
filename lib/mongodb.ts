@@ -1,0 +1,38 @@
+import mongoose from "mongoose";
+import dns from "dns";
+
+const DNS_SERVERS = ["8.8.8.8", "1.1.1.1", "8.8.4.4", "1.0.0.1"];
+dns.setDefaultResultOrder("ipv4first");
+
+let cached = (global as any).mongoose;
+if (!cached) cached = (global as any).mongoose = { conn: null, promise: null };
+
+export async function connectDB(retries = 2, delayMs = 500) {
+  if (cached.conn) return cached.conn;
+
+  const MONGODB_URI = process.env.MONGODB_URI;
+  if (!MONGODB_URI) throw new Error("Please define MONGODB_URI");
+
+  if (cached.promise) return cached.promise;
+
+  cached.promise = (async () => {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      const server = DNS_SERVERS[(attempt - 1) % DNS_SERVERS.length];
+      dns.setServers([server]);
+      try {
+        const conn = await mongoose.connect(MONGODB_URI, {
+          dbName: "ecommerce",
+          serverSelectionTimeoutMS: 4000,
+          maxPoolSize: 5,
+        });
+        return conn;
+      } catch (err) {
+        if (attempt < retries) await new Promise((r) => setTimeout(r, delayMs));
+        else { cached.promise = null; throw err; }
+      }
+    }
+  })();
+
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
