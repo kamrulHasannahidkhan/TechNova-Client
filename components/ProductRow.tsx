@@ -57,13 +57,13 @@ export default function ProductRow({
             <Link
               key={p._id}
               href={productHref}
-              className="group surface-card overflow-hidden hover:-translate-y-1 hover:border-steel/50 transition-all duration-300 flex flex-col justify-between"
+              className="group bg-surface-card border border-line rounded-2xl overflow-hidden hover:-translate-y-1 hover:border-signal/50 transition-all duration-300 flex flex-col justify-between shadow-sm hover:shadow-md"
             >
               {/* Product Image Container */}
               <div className="relative aspect-square bg-white p-4 overflow-hidden rounded-t-2xl">
                 {/* Discount Badge */}
                 {discountPct !== null && (
-                  <span className="absolute top-2.5 left-2.5 z-10 bg-accent-gold text-slate-950 text-xs font-display font-extrabold px-2 py-0.5 rounded-md shadow-sm">
+                  <span className="absolute top-2.5 left-2.5 z-10 bg-signal text-white text-xs font-display font-extrabold px-2 py-0.5 rounded-md shadow-sm">
                     -{discountPct}%
                   </span>
                 )}
@@ -78,7 +78,7 @@ export default function ProductRow({
                     className="object-contain p-3 group-hover:scale-105 transition-transform duration-500 ease-out"
                   />
                 ) : (
-                  <div className="w-full h-full bg-paper flex items-center justify-center text-steel/50 text-xs">
+                  <div className="w-full h-full bg-surface-subtle flex items-center justify-center text-steel/50 text-xs">
                     No Image
                   </div>
                 )}
