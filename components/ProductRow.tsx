@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Sparkles, Tag } from "lucide-react";
 
 interface Product {
   _id: string;
@@ -29,19 +30,25 @@ export default function ProductRow({
   if (!products || products.length === 0) return null;
 
   return (
-    <section id={id} className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16 border-t border-line">
+    <section
+      id={id}
+      className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16 border-t border-white/10"
+    >
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-2">
         <div>
-          <h2 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-ink">
-            {title}
-          </h2>
-          <p className="text-steel text-sm mt-1">{subtitle}</p>
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <h2 className="font-sans text-2xl md:text-3xl font-bold tracking-tight text-white">
+              {title}
+            </h2>
+          </div>
+          <p className="text-slate-400 text-xs sm:text-sm">{subtitle}</p>
         </div>
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4 md:gap-5">
         {products.map((p) => {
           const hasDiscount = Boolean(p.originalPrice && p.originalPrice > p.price);
           const discountPct =
@@ -57,14 +64,14 @@ export default function ProductRow({
             <Link
               key={p._id}
               href={productHref}
-              className="group bg-surface-card border border-line rounded-2xl overflow-hidden hover:-translate-y-1 hover:border-signal/50 transition-all duration-300 flex flex-col justify-between shadow-sm hover:shadow-md"
+              className="group bg-slate-900 border border-white/10 rounded-2xl overflow-hidden hover:-translate-y-1 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 flex flex-col justify-between"
             >
-              {/* Product Image Container */}
-              <div className="relative aspect-square bg-white p-4 overflow-hidden rounded-t-2xl">
+              {/* Product Image Container (Pure White Frame for transparent PNGs) */}
+              <div className="relative aspect-square bg-white p-3 overflow-hidden rounded-t-2xl flex items-center justify-center">
                 {/* Discount Badge */}
                 {discountPct !== null && (
-                  <span className="absolute top-2.5 left-2.5 z-10 bg-signal text-white text-xs font-display font-extrabold px-2 py-0.5 rounded-md shadow-sm">
-                    -{discountPct}%
+                  <span className="absolute top-2.5 left-2.5 z-10 bg-rose-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-md shadow-sm flex items-center gap-1">
+                    <Tag className="w-3 h-3" /> -{discountPct}%
                   </span>
                 )}
 
@@ -78,29 +85,29 @@ export default function ProductRow({
                     className="object-contain p-3 group-hover:scale-105 transition-transform duration-500 ease-out"
                   />
                 ) : (
-                  <div className="w-full h-full bg-surface-subtle flex items-center justify-center text-steel/50 text-xs">
+                  <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400 text-xs font-medium">
                     No Image
                   </div>
                 )}
 
-                {/* Warranty Badge (Dynamic or Standard) */}
-                <span className="absolute bottom-2.5 right-2.5 bg-surface-dark text-white text-[9px] font-mono-spec font-bold px-1.5 py-1 rounded-md leading-tight text-center uppercase tracking-wider shadow-md">
+                {/* Warranty Badge */}
+                <span className="absolute bottom-2.5 right-2.5 bg-slate-900/90 backdrop-blur-sm text-amber-400 border border-amber-400/20 text-[9px] font-mono font-bold px-1.5 py-1 rounded-md leading-tight text-center uppercase tracking-wider shadow-md">
                   {p.warranty ? p.warranty : <>6<br />MONTHS</>}
                 </span>
               </div>
 
               {/* Product Info */}
-              <div className="p-4 border-t border-line/60 bg-surface-subtle flex-1 flex flex-col justify-between">
-                <h3 className="text-xs sm:text-sm font-medium text-ink group-hover:text-signal transition-colors line-clamp-2 leading-snug min-h-[2.5rem]">
+              <div className="p-4 border-t border-white/10 bg-slate-900/50 flex-1 flex flex-col justify-between">
+                <h3 className="text-xs sm:text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug min-h-[2.5rem]">
                   {p.name}
                 </h3>
 
                 <div className="mt-3 flex items-baseline gap-2">
-                  <span className="font-display font-bold text-sm sm:text-base text-ink">
+                  <span className="font-sans font-bold text-sm sm:text-base text-white">
                     ৳{p.price.toLocaleString()}
                   </span>
                   {hasDiscount && p.originalPrice && (
-                    <span className="text-xs text-steel line-through font-mono-spec">
+                    <span className="text-xs text-slate-500 line-through font-mono">
                       ৳{p.originalPrice.toLocaleString()}
                     </span>
                   )}

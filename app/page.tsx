@@ -4,6 +4,7 @@ import DepartmentsSection from "@/components/DepartmentsSection";
 import ProductRow from "@/components/ProductRow";
 import BottomBanner from "@/components/BottomBanner";
 import { getProductsByTag } from "@/lib/api";
+import TrustBadges from "@/components/TrustBadges";
 
 export const dynamic = "force-dynamic";
 
@@ -52,6 +53,7 @@ export default function HomePage() {
       <Suspense fallback={<ProductRowSkeleton />}>
         <ProductRowAsync id="best-sellers" title="Best Sellers" tag="best-seller" />
       </Suspense>
+      <TrustBadges />
 
       <BottomBanner />
     </>
