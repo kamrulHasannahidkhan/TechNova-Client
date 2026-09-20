@@ -32,18 +32,18 @@ export default function ProductRow({
   return (
     <section
       id={id}
-      className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16 border-t border-white/10"
+      className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16 border-t border-[var(--line)]"
     >
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-2">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <h2 className="font-sans text-2xl md:text-3xl font-bold tracking-tight text-white">
+            <Sparkles className="w-4 h-4 text-amber-500" />
+            <h2 className="font-sans text-2xl md:text-3xl font-bold tracking-tight text-[var(--ink)]">
               {title}
             </h2>
           </div>
-          <p className="text-slate-400 text-xs sm:text-sm">{subtitle}</p>
+          <p className="text-[var(--steel)] text-xs sm:text-sm">{subtitle}</p>
         </div>
       </div>
 
@@ -64,9 +64,9 @@ export default function ProductRow({
             <Link
               key={p._id}
               href={productHref}
-              className="group bg-slate-900 border border-white/10 rounded-2xl overflow-hidden hover:-translate-y-1 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 flex flex-col justify-between"
+              className="group bg-[var(--surface-card)] border border-[var(--line)] rounded-2xl overflow-hidden hover:-translate-y-1 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
             >
-              {/* Product Image Container (Pure White Frame for transparent PNGs) */}
+              {/* Product Image Container */}
               <div className="relative aspect-square bg-white p-3 overflow-hidden rounded-t-2xl flex items-center justify-center">
                 {/* Discount Badge */}
                 {discountPct !== null && (
@@ -91,23 +91,23 @@ export default function ProductRow({
                 )}
 
                 {/* Warranty Badge */}
-                <span className="absolute bottom-2.5 right-2.5 bg-slate-900/90 backdrop-blur-sm text-amber-400 border border-amber-400/20 text-[9px] font-mono font-bold px-1.5 py-1 rounded-md leading-tight text-center uppercase tracking-wider shadow-md">
+                <span className="absolute bottom-2.5 right-2.5 bg-slate-900 text-amber-400 border border-amber-400/20 text-[9px] font-mono font-bold px-1.5 py-1 rounded-md leading-tight text-center uppercase tracking-wider shadow-md">
                   {p.warranty ? p.warranty : <>6<br />MONTHS</>}
                 </span>
               </div>
 
               {/* Product Info */}
-              <div className="p-4 border-t border-white/10 bg-slate-900/50 flex-1 flex flex-col justify-between">
-                <h3 className="text-xs sm:text-sm font-medium text-slate-200 group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug min-h-[2.5rem]">
+              <div className="p-4 border-t border-[var(--line)] bg-[var(--surface-subtle)] flex-1 flex flex-col justify-between">
+                <h3 className="text-xs sm:text-sm font-medium text-[var(--ink)] group-hover:text-blue-500 transition-colors line-clamp-2 leading-snug min-h-[2.5rem]">
                   {p.name}
                 </h3>
 
                 <div className="mt-3 flex items-baseline gap-2">
-                  <span className="font-sans font-bold text-sm sm:text-base text-white">
+                  <span className="font-sans font-bold text-sm sm:text-base text-[var(--ink)]">
                     ৳{p.price.toLocaleString()}
                   </span>
                   {hasDiscount && p.originalPrice && (
-                    <span className="text-xs text-slate-500 line-through font-mono">
+                    <span className="text-xs text-[var(--steel)] line-through font-mono">
                       ৳{p.originalPrice.toLocaleString()}
                     </span>
                   )}
