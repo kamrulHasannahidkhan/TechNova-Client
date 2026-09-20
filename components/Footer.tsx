@@ -1,12 +1,15 @@
 import { getContentBySection } from "@/lib/api";
 import Link from "next/link";
+import { Zap, MapPin, Phone, Mail, Play, Apple } from "lucide-react";
 
 export default async function Footer() {
   const content = await getContentBySection("footer");
-  const tagline = content?.description || "TechNova: Your one-stop shop for Arduino, Raspberry Pi, sensors, modules, 3D printers, drones, and more. High-quality electronics for hobbyists and professionals.";
+  const tagline =
+    content?.description ||
+    "TechNova: Your one-stop shop for Arduino, Raspberry Pi, sensors, modules, 3D printers, drones, and more. High-quality electronics for hobbyists and professionals.";
 
   return (
-    <footer className="bg-[#121824] text-slate-300 text-sm mt-16 font-sans border-t border-slate-800">
+    <footer className="bg-paper text-steel text-sm mt-16 font-sans border-t border-line">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
         
@@ -14,33 +17,49 @@ export default async function Footer() {
         <div className="lg:col-span-1 space-y-5">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-emerald-400 font-bold text-2xl">⚡</span>
+              <Zap className="w-6 h-6 text-signal fill-signal" />
               <div>
-                <span className="font-bold text-lg text-white tracking-wide block leading-none">
-                  TechNova<span className="text-emerald-400">.</span>
+                <span className="font-display font-bold text-lg text-ink tracking-wide block leading-none">
+                  TechNova<span className="text-signal">.</span>
                 </span>
-                <span className="text-[10px] text-slate-400 tracking-wider">Stay Innovative</span>
+                <span className="text-[10px] text-steel/80 tracking-wider font-mono-spec">
+                  Stay Innovative
+                </span>
               </div>
             </div>
           </div>
-          
-          <p className="text-slate-400 text-xs leading-relaxed">
+
+          <p className="text-steel text-xs leading-relaxed">
             {tagline}
           </p>
 
           <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2 pt-2">
-            <a href="#" className="flex items-center gap-2 bg-[#1c2434] hover:bg-[#253046] border border-slate-700/60 text-white px-3 py-2 rounded-lg transition-colors">
-              <span className="text-xl">▶</span>
+            <a
+              href="#"
+              className="flex items-center gap-2.5 bg-surface-card hover:bg-surface-subtle border border-line text-ink px-3 py-2 rounded-xl transition-all shadow-sm active:scale-95"
+            >
+              <Play className="w-4 h-4 text-signal fill-signal" />
               <div className="text-left">
-                <div className="text-[9px] uppercase tracking-wider text-slate-400">Get it on</div>
-                <div className="text-xs font-semibold leading-none">Google Play</div>
+                <div className="text-[9px] uppercase tracking-wider text-steel font-mono-spec">
+                  Get it on
+                </div>
+                <div className="text-xs font-semibold leading-none text-ink">
+                  Google Play
+                </div>
               </div>
             </a>
-            <a href="#" className="flex items-center gap-2 bg-[#1c2434] hover:bg-[#253046] border border-slate-700/60 text-white px-3 py-2 rounded-lg transition-colors">
-              <span className="text-xl">🍎</span>
+            <a
+              href="#"
+              className="flex items-center gap-2.5 bg-surface-card hover:bg-surface-subtle border border-line text-ink px-3 py-2 rounded-xl transition-all shadow-sm active:scale-95"
+            >
+              <Apple className="w-4 h-4 text-ink fill-ink" />
               <div className="text-left">
-                <div className="text-[9px] uppercase tracking-wider text-slate-400">Download on</div>
-                <div className="text-xs font-semibold leading-none">App Store</div>
+                <div className="text-[9px] uppercase tracking-wider text-steel font-mono-spec">
+                  Download on
+                </div>
+                <div className="text-xs font-semibold leading-none text-ink">
+                  App Store
+                </div>
               </div>
             </a>
           </div>
@@ -48,73 +67,145 @@ export default async function Footer() {
 
         {/* Column 2: Category */}
         <div>
-          <h3 className="text-white font-semibold text-base mb-4 pb-2 border-b border-dashed border-slate-700/60">
+          <h3 className="text-ink font-semibold text-base mb-4 pb-2 border-b border-dashed border-line">
             Category
           </h3>
-          <ul className="space-y-2.5 text-slate-400 text-xs">
-            <li><Link href="/category/components" className="hover:text-emerald-400 transition-colors">Components</Link></li>
-            <li><Link href="/category/accessories" className="hover:text-emerald-400 transition-colors">Accessories</Link></li>
-            <li><Link href="/category/microcontrollers" className="hover:text-emerald-400 transition-colors">Microcontrollers</Link></li>
-            <li><Link href="/category/3d-printers" className="hover:text-emerald-400 transition-colors">3D Printers</Link></li>
-            <li><Link href="/category/rc-hobby" className="hover:text-emerald-400 transition-colors">RC Hobby</Link></li>
-            <li><Link href="/category/diy-robot" className="hover:text-emerald-400 transition-colors">DIY Robot</Link></li>
+          <ul className="space-y-2.5 text-steel text-xs font-medium">
+            <li>
+              <Link href="/category/components" className="hover:text-signal transition-colors">
+                Components
+              </Link>
+            </li>
+            <li>
+              <Link href="/category/accessories" className="hover:text-signal transition-colors">
+                Accessories
+              </Link>
+            </li>
+            <li>
+              <Link href="/category/microcontrollers" className="hover:text-signal transition-colors">
+                Microcontrollers
+              </Link>
+            </li>
+            <li>
+              <Link href="/category/3d-printers" className="hover:text-signal transition-colors">
+                3D Printers
+              </Link>
+            </li>
+            <li>
+              <Link href="/category/rc-hobby" className="hover:text-signal transition-colors">
+                RC Hobby
+              </Link>
+            </li>
+            <li>
+              <Link href="/category/diy-robot" className="hover:text-signal transition-colors">
+                DIY Robot
+              </Link>
+            </li>
           </ul>
         </div>
 
         {/* Column 3: Company */}
         <div>
-          <h3 className="text-white font-semibold text-base mb-4 pb-2 border-b border-dashed border-slate-700/60">
+          <h3 className="text-ink font-semibold text-base mb-4 pb-2 border-b border-dashed border-line">
             Company
           </h3>
-          <ul className="space-y-2.5 text-slate-400 text-xs">
-            <li><Link href="/about" className="hover:text-emerald-400 transition-colors">About us</Link></li>
-            <li><Link href="/warranty" className="hover:text-emerald-400 transition-colors">Warranty Policy</Link></li>
-            <li><Link href="/faq" className="hover:text-emerald-400 transition-colors">FAQ</Link></li>
-            <li><Link href="/terms" className="hover:text-emerald-400 transition-colors">Terms of use</Link></li>
-            <li><Link href="/project" className="hover:text-emerald-400 transition-colors">Project</Link></li>
-            <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Contact us</Link></li>
+          <ul className="space-y-2.5 text-steel text-xs font-medium">
+            <li>
+              <Link href="/about" className="hover:text-signal transition-colors">
+                About us
+              </Link>
+            </li>
+            <li>
+              <Link href="/warranty" className="hover:text-signal transition-colors">
+                Warranty Policy
+              </Link>
+            </li>
+            <li>
+              <Link href="/faq" className="hover:text-signal transition-colors">
+                FAQ
+              </Link>
+            </li>
+            <li>
+              <Link href="/terms" className="hover:text-signal transition-colors">
+                Terms of use
+              </Link>
+            </li>
+            <li>
+              <Link href="/project" className="hover:text-signal transition-colors">
+                Project
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="hover:text-signal transition-colors">
+                Contact us
+              </Link>
+            </li>
           </ul>
         </div>
 
         {/* Column 4: Account */}
         <div>
-          <h3 className="text-white font-semibold text-base mb-4 pb-2 border-b border-dashed border-slate-700/60">
+          <h3 className="text-ink font-semibold text-base mb-4 pb-2 border-b border-dashed border-line">
             Account
           </h3>
-          <ul className="space-y-2.5 text-slate-400 text-xs">
-            <li><Link href="/signin" className="hover:text-emerald-400 transition-colors">Sign In</Link></li>
-            <li><Link href="/cart" className="hover:text-emerald-400 transition-colors">View Cart</Link></li>
-            <li><Link href="/privacy" className="hover:text-emerald-400 transition-colors">Privacy Policy</Link></li>
-            <li><Link href="/returns" className="hover:text-emerald-400 transition-colors">Return Policy</Link></li>
-            <li><Link href="/shipping" className="hover:text-emerald-400 transition-colors">Shipping Policy</Link></li>
-            <li><Link href="/payments" className="hover:text-emerald-400 transition-colors">Payments</Link></li>
+          <ul className="space-y-2.5 text-steel text-xs font-medium">
+            <li>
+              <Link href="/signin" className="hover:text-signal transition-colors">
+                Sign In
+              </Link>
+            </li>
+            <li>
+              <Link href="/cart" className="hover:text-signal transition-colors">
+                View Cart
+              </Link>
+            </li>
+            <li>
+              <Link href="/privacy" className="hover:text-signal transition-colors">
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link href="/returns" className="hover:text-signal transition-colors">
+                Return Policy
+              </Link>
+            </li>
+            <li>
+              <Link href="/shipping" className="hover:text-signal transition-colors">
+                Shipping Policy
+              </Link>
+            </li>
+            <li>
+              <Link href="/payments" className="hover:text-signal transition-colors">
+                Payments
+              </Link>
+            </li>
           </ul>
         </div>
 
         {/* Column 5: Contact & Socials */}
         <div>
-          <h3 className="text-white font-semibold text-base mb-4 pb-2 border-b border-dashed border-slate-700/60">
+          <h3 className="text-ink font-semibold text-base mb-4 pb-2 border-b border-dashed border-line">
             Contact
           </h3>
-          <ul className="space-y-3 text-slate-400 text-xs">
+          <ul className="space-y-3 text-steel text-xs">
             <li className="flex items-start gap-2">
-              <span className="text-slate-500 mt-0.5">📍</span>
+              <MapPin className="w-4 h-4 text-signal shrink-0 mt-0.5" />
               <span>Shop 440 & 441, 3rd Floor, Farmview SuperMarket, Farmgate, Dhaka 1215</span>
             </li>
             <li className="flex items-center gap-2">
-              <span className="text-slate-500">💬</span>
+              <Phone className="w-4 h-4 text-signal shrink-0" />
               <span>+8801717062205 (Info)</span>
             </li>
             <li className="flex items-center gap-2">
-              <span className="text-slate-500">💬</span>
+              <Phone className="w-4 h-4 text-signal shrink-0" />
               <span>+8801641757175 (Store)</span>
             </li>
             <li className="flex items-center gap-2">
-              <span className="text-slate-500">💬</span>
+              <Phone className="w-4 h-4 text-signal shrink-0" />
               <span>+8801919646416 (Delivery)</span>
             </li>
             <li className="flex items-center gap-2">
-              <span className="text-slate-500">✉️</span>
+              <Mail className="w-4 h-4 text-signal shrink-0" />
               <span>info@electronics.com.bd</span>
             </li>
           </ul>
@@ -125,7 +216,7 @@ export default async function Footer() {
               <a
                 key={i}
                 href="#"
-                className="w-7 h-7 rounded-full bg-[#1c2434] hover:bg-emerald-500 hover:text-white flex items-center justify-center text-xs font-bold text-slate-300 transition-colors"
+                className="w-7 h-7 rounded-full bg-surface-subtle border border-line hover:bg-signal hover:text-white hover:border-signal flex items-center justify-center text-xs font-bold text-steel transition-all active:scale-90"
               >
                 {icon}
               </a>
@@ -136,20 +227,28 @@ export default async function Footer() {
       </div>
 
       {/* Bottom Legal & Payment Bar */}
-      <div className="border-t border-slate-800 bg-[#0e131d] py-4">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+      <div className="border-t border-line bg-surface-subtle py-4">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-steel">
           <p>
-            Copyright © {new Date().getFullYear()} <span className="text-amber-500 font-semibold">TechNova.Com.BD</span> all rights reserved.
+            Copyright © {new Date().getFullYear()}{" "}
+            <span className="text-signal font-semibold">TechNova.Com.BD</span> all rights reserved.
           </p>
 
           {/* Payment Cards Badges */}
           <div className="flex flex-wrap items-center gap-1.5 font-bold text-[10px]">
-            <span className="px-2 py-1 bg-white text-blue-900 rounded italic font-black">VISA</span>
-            <span className="px-2 py-1 bg-white text-red-600 rounded">mastercard</span>
-            <span className="px-2 py-1 bg-white text-blue-600 rounded italic">PayPal</span>
-            <span className="px-2 py-1 bg-white text-pink-700 rounded">Skrill</span>
-            <span className="px-2 py-1 bg-white text-blue-800 rounded">maestro</span>
-            <span className="px-2 py-1 bg-white text-blue-500 rounded">VISA Electron</span>
+            <span className="px-2 py-1 bg-surface-card border border-line text-blue-900 rounded italic font-black">
+              bkash
+            </span>
+            <span className="px-2 py-1 bg-surface-card border border-line text-green-700 rounded">
+              nogod 
+            </span>
+            <span className="px-2 py-1 bg-surface-card border border-line text-red-600 rounded">
+              Rocket
+            </span>
+            <span className="px-2 py-1 bg-surface-card border border-line text-blue-700 rounded">
+              UPay
+            </span>
+           
           </div>
         </div>
       </div>
