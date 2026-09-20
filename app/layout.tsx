@@ -11,8 +11,9 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
 
 export const metadata: Metadata = {
-  title: "Store",
+  title: "TechNova - Your One-Stop Tech Shop",
   description: "Ecommerce storefront",
+  MadeBy: "Kamrul Hasan",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
