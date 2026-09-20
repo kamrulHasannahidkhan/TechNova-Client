@@ -22,7 +22,7 @@ export default async function BottomBanner() {
   );
 
   const BannerInner = (
-    <div className="group relative w-full aspect-[21/9] sm:aspect-[2.5/1] md:aspect-[3/1] rounded-3xl overflow-hidden bg-surface-dark border border-line shadow-xl">
+    <div className="group relative w-full aspect-[21/9] sm:aspect-[2.5/1] md:aspect-[3/1] rounded-3xl overflow-hidden bg-surface-card border border-line shadow-xl">
       {/* Optimized Background Image */}
       <Image
         src={content.image}
@@ -32,17 +32,17 @@ export default async function BottomBanner() {
         className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
       />
 
-      {/* Gradient Overlay for Text Contrast */}
+      {/* Gradient Overlay for Text Readability */}
       {hasText && (
         <>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent z-10" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/70 via-transparent to-transparent z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/85 via-surface-dark/40 to-transparent z-10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-surface-dark/70 via-transparent to-transparent z-10" />
 
           {/* Banner Content Body */}
           <div className="absolute bottom-0 left-0 p-6 sm:p-8 md:p-12 max-w-xl z-20 flex flex-col items-start">
             {content.badge && (
-              <span className="inline-flex items-center gap-1.5 font-mono-spec text-xs md:text-sm text-accent-gold font-bold tracking-widest uppercase mb-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-gold animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 font-mono-spec text-xs md:text-sm text-cyan-glow font-bold tracking-widest uppercase mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-glow animate-pulse" />
                 {content.badge}
               </span>
             )}
@@ -54,13 +54,13 @@ export default async function BottomBanner() {
             )}
 
             {content.description && (
-              <p className="text-slate-300 text-xs sm:text-sm md:text-base mt-2 leading-relaxed line-clamp-2 max-w-md">
+              <p className="text-slate-200 text-xs sm:text-sm md:text-base mt-2 leading-relaxed line-clamp-2 max-w-md">
                 {content.description}
               </p>
             )}
 
             {content.ctaText && (
-              <div className="mt-4 sm:mt-6 inline-flex items-center gap-2 bg-white text-slate-950 font-semibold text-xs sm:text-sm px-6 py-3 rounded-2xl group-hover:bg-accent-gold transition-colors duration-300 shadow-md">
+              <div className="mt-4 sm:mt-6 inline-flex items-center gap-2 bg-cta text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-2xl group-hover:bg-cta-hover transition-colors duration-300 shadow-md">
                 {content.ctaText}
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
               </div>
