@@ -5,8 +5,6 @@ import { useCart } from "@/context/CartContext";
 import { useSession } from "next-auth/react";
 import { submitOrder } from "@/lib/api";
 
-const API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL;
-
 const SHIPPING_OPTIONS = [
   { key: "inside", label: "Inside Dhaka City", price: 70 },
   { key: "outside", label: "Outside Dhaka", price: 130 },
@@ -37,7 +35,6 @@ export default function CheckoutPage() {
   const [placing, setPlacing] = useState(false);
   const [placed, setPlaced] = useState(false);
 
-  // Prefill email for logged-in users, and load their saved addresses.
   useEffect(() => {
     if (!user) return;
     setForm((f) => ({ ...f, email: user.email }));
@@ -46,7 +43,7 @@ export default function CheckoutPage() {
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => { if (Array.isArray(data)) setSavedAddresses(data); })
       .catch(() => {});
-  }, [user, token]);
+  }, [user]);
 
   const useAddress = (addr: SavedAddress) => {
     setForm((f) => ({

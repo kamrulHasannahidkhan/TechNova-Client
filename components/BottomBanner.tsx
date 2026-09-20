@@ -28,7 +28,7 @@ export default async function BottomBanner() {
         src={content.image}
         alt={content.title || "Promotional Banner"}
         fill
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
         className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
       />
 
@@ -39,30 +39,30 @@ export default async function BottomBanner() {
           <div className="absolute inset-0 bg-gradient-to-r from-surface-dark/80 via-surface-dark/20 to-transparent z-10" />
 
           {/* Banner Content Body */}
-          <div className="absolute inset-0 p-4 sm:p-6 md:p-8 z-20 flex flex-col justify-center items-start max-w-xl">
+          <div className="absolute inset-0 p-3 sm:p-6 md:p-8 z-20 flex flex-col justify-center items-start max-w-xs sm:max-w-md md:max-w-xl">
             {content.badge && (
-              <span className="inline-flex items-center gap-1.5 font-mono-spec text-[10px] sm:text-xs text-cyan-glow font-bold tracking-widest uppercase mb-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-glow animate-pulse" />
-                {content.badge}
+              <span className="inline-flex items-center gap-1 sm:gap-1.5 font-mono-spec text-[9px] xs:text-[10px] sm:text-xs text-cyan-glow font-bold tracking-widest uppercase mb-0.5 sm:mb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-glow animate-pulse shrink-0" />
+                <span className="truncate">{content.badge}</span>
               </span>
             )}
 
             {content.title && (
-              <h2 className="font-display text-lg sm:text-2xl md:text-3xl font-extrabold text-white leading-tight tracking-tight drop-shadow-sm">
+              <h2 className="font-display text-sm xs:text-base sm:text-2xl md:text-3xl font-extrabold text-white leading-tight tracking-tight drop-shadow-sm line-clamp-2">
                 {content.title}
               </h2>
             )}
 
             {content.description && (
-              <p className="text-slate-200 text-xs sm:text-sm mt-1 leading-normal line-clamp-1 sm:line-clamp-2 max-w-md">
+              <p className="text-slate-200 text-[11px] xs:text-xs sm:text-sm mt-0.5 sm:mt-1 leading-normal line-clamp-1 sm:line-clamp-2 max-w-xs sm:max-w-md">
                 {content.description}
               </p>
             )}
 
             {content.ctaText && (
-              <div className="mt-3 inline-flex items-center gap-1.5 bg-cta text-white font-semibold text-xs px-4 py-2 rounded-xl group-hover:bg-cta-hover transition-colors duration-300 shadow-md">
-                {content.ctaText}
-                <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+              <div className="mt-2 sm:mt-3 inline-flex items-center gap-1 sm:gap-1.5 bg-cta text-white font-semibold text-[10px] xs:text-xs px-2.5 xs:px-3 sm:px-4 py-1 sm:py-2 rounded-lg sm:rounded-xl group-hover:bg-cta-hover transition-colors duration-300 shadow-md shrink-0">
+                <span>{content.ctaText}</span>
+                <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200 shrink-0" />
               </div>
             )}
           </div>
@@ -72,9 +72,9 @@ export default async function BottomBanner() {
   );
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-8 sm:pb-12">
       {content.ctaLink ? (
-        <Link href={content.ctaLink} className="block">
+        <Link href={content.ctaLink} className="block w-full">
           {BannerInner}
         </Link>
       ) : (
