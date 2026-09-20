@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+/* Tailwind v4 Theme Utility Mapping */
+@theme {
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-signal: var(--signal);
+  --color-steel: var(--steel);
+  --color-line: var(--line);
+  --color-success: var(--success);
+  --color-accent-gold: var(--accent-gold);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-card: var(--surface-card);
+  --color-surface-dark: var(--surface-dark);
+
+  --font-display: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono-spec: var(--font-jetbrains-mono), monospace;
+}
+
+/* Light Theme Variables */
 :root {
   --ink: #0f172a;
   --paper: #f8fafc;
@@ -7,41 +25,69 @@
   --steel: #64748b;
   --line: #e2e8f0;
   --success: #10b981;
+  --accent-gold: #f59e0b;
+  --surface-subtle: #f1f5f9;
+  --surface-card: #ffffff;
+  --surface-dark: #0f172a;
 }
 
+/* Dark Theme Overrides */
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #f1f5f9;
+    --ink: #f8fafc;
     --paper: #0b1220;
-    --signal: #60a5fa;
+    --signal: #3b82f6;
     --steel: #94a3b8;
     --line: #1e293b;
     --success: #34d399;
+    --accent-gold: #fbbf24;
+    --surface-subtle: #0f172a;
+    --surface-card: #131c31;
+    --surface-dark: #020617;
   }
 }
 
+/* Global Base Styles */
 body {
-  background: var(--paper);
+  background-color: var(--paper);
   color: var(--ink);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.font-display {
-  font-family: var(--font-space-grotesk), sans-serif;
+/* Utility Surface Card Token Class */
+.surface-card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
 }
 
-.font-mono-spec {
-  font-family: var(--font-jetbrains-mono), monospace;
-}
-
+/* Seamless Continuous Ticker Keyframe & Animation */
 @keyframes ticker {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 .ticker-track {
-  animation: ticker 22s linear infinite;
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: ticker 25s linear infinite;
 }
 
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* Accessibility: Accessibility reduced motion override */
 @media (prefers-reduced-motion: reduce) {
-  .ticker-track { animation: none; }
+  .ticker-track {
+    animation: none;
+  }
 }
