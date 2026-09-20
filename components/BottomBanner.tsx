@@ -1,41 +1,69 @@
 import Link from "next/link";
+import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 import { getContentBySection } from "@/lib/api";
 
+interface BannerContent {
+  image?: string;
+  badge?: string;
+  title?: string;
+  description?: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
 export default async function BottomBanner() {
-  const content = await getContentBySection("bottom-banner");
+  const content: BannerContent | null = await getContentBySection("bottom-banner");
+
   if (!content?.image) return null;
 
-  const hasText = content.badge || content.title || content.description || content.ctaText;
+  const hasText = Boolean(
+    content.badge || content.title || content.description || content.ctaText
+  );
 
-  const inner = (
-    <div className="relative w-full aspect-[21/9] md:aspect-[3/1] rounded-2xl overflow-hidden">
-      <img
+  const BannerInner = (
+    <div className="group relative w-full aspect-[21/9] sm:aspect-[2.5/1] md:aspect-[3/1] rounded-3xl overflow-hidden bg-surface-dark border border-line shadow-xl">
+      {/* Optimized Background Image */}
+      <Image
         src={content.image}
-        alt={content.title || "Promotion"}
-        className="absolute inset-0 w-full h-full object-cover"
+        alt={content.title || "Promotional Banner"}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+        className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
       />
 
+      {/* Gradient Overlay for Text Contrast */}
       {hasText && (
         <>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-          <div className="absolute bottom-0 left-0 p-5 md:p-8 max-w-lg">
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent z-10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/70 via-transparent to-transparent z-10" />
+
+          {/* Banner Content Body */}
+          <div className="absolute bottom-0 left-0 p-6 sm:p-8 md:p-12 max-w-xl z-20 flex flex-col items-start">
             {content.badge && (
-              <p className="font-mono-spec text-xs md:text-sm text-[--signal] font-bold tracking-widest mb-1">
+              <span className="inline-flex items-center gap-1.5 font-mono-spec text-xs md:text-sm text-accent-gold font-bold tracking-widest uppercase mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-gold animate-pulse" />
                 {content.badge}
-              </p>
-            )}
-            {content.title && (
-              <p className="font-display text-2xl md:text-4xl font-black text-white leading-tight">
-                {content.title}
-              </p>
-            )}
-            {content.description && (
-              <p className="text-white/80 text-sm md:text-base mt-1">{content.description}</p>
-            )}
-            {content.ctaText && (
-              <span className="inline-block mt-3 bg-white text-black font-semibold text-sm px-5 py-2 rounded-lg">
-                {content.ctaText}
               </span>
+            )}
+
+            {content.title && (
+              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight tracking-tight drop-shadow-sm">
+                {content.title}
+              </h2>
+            )}
+
+            {content.description && (
+              <p className="text-slate-300 text-xs sm:text-sm md:text-base mt-2 leading-relaxed line-clamp-2 max-w-md">
+                {content.description}
+              </p>
+            )}
+
+            {content.ctaText && (
+              <div className="mt-4 sm:mt-6 inline-flex items-center gap-2 bg-white text-slate-950 font-semibold text-xs sm:text-sm px-6 py-3 rounded-2xl group-hover:bg-accent-gold transition-colors duration-300 shadow-md">
+                {content.ctaText}
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+              </div>
             )}
           </div>
         </>
@@ -44,8 +72,14 @@ export default async function BottomBanner() {
   );
 
   return (
-    <section className="max-w-6xl mx-auto px-6 pb-16">
-      {content.ctaLink ? <Link href={content.ctaLink}>{inner}</Link> : inner}
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+      {content.ctaLink ? (
+        <Link href={content.ctaLink} className="block">
+          {BannerInner}
+        </Link>
+      ) : (
+        BannerInner
+      )}
     </section>
   );
 }
