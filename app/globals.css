@@ -1,213 +1,36 @@
 @import "tailwindcss";
 
-/* ==========================================================================
-   Tailwind CSS v4 Theme Mapping & Design System Tokens
-   ========================================================================== */
-@theme {
-  /* Dynamic Color Mapping -> Tailwind Utilities (bg-ink, text-paper, border-line, etc.) */
-  --color-ink: var(--ink);
-  --color-paper: var(--paper);
-  --color-signal: var(--signal);
-  --color-steel: var(--steel);
-  --color-line: var(--line);
-
-  --color-surface-subtle: var(--surface-subtle);
-  --color-surface-dark: var(--surface-dark);
-  --color-accent-gold: var(--accent-gold);
-  --color-accent-gold-hover: var(--accent-gold-hover);
-
-  /* Typography Design Tokens */
-  --font-sans: var(--font-inter, system-ui), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: var(--font-space-grotesk), var(--font-sans);
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-/* ==========================================================================
-   CSS Variable Definitions (Light / Dark Themes)
-   ========================================================================== */
 :root {
-  /* Default Light Mode */
   --ink: #0f172a;
   --paper: #f8fafc;
   --signal: #2563eb;
   --steel: #64748b;
   --line: #e2e8f0;
-
-  /* Surfaces & Accents */
-  --surface-subtle: #ffffff;
-  --surface-dark: #020617;
-  --accent-gold: #f59e0b;
-  --accent-gold-hover: #d97706;
-
-  /* Elevation Shadows */
-  --shadow-subtle: 0 1px 3px 0 rgb(15 23 42 / 0.05), 0 1px 2px -1px rgb(15 23 42 / 0.05);
-  --shadow-card: 0 4px 6px -1px rgb(15 23 42 / 0.04), 0 2px 4px -2px rgb(15 23 42 / 0.03);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ink: #f8fafc;
-    --paper: #090d16;
-    --signal: #3b82f6;
-    --steel: #94a3b8;
-    --line: #1e293b;
-
-    /* Dark Mode Surfaces */
-    --surface-subtle: #0f172a;
-    --surface-dark: #020617;
-    --accent-gold: #fbbf24;
-    --accent-gold-hover: #f59e0b;
-
-    /* Elevation Shadows */
-    --shadow-subtle: 0 1px 3px 0 rgb(0 0 0 / 0.3);
-    --shadow-card: 0 4px 12px -2px rgb(0 0 0 / 0.4);
-  }
-}
-
-/* Manual Theme Class Support (.dark override) */
-.dark {
-  --ink: #f8fafc;
-  --paper: #090d16;
-  --signal: #3b82f6;
-  --steel: #94a3b8;
-  --line: #1e293b;
-
-  --surface-subtle: #0f172a;
-  --surface-dark: #020617;
-  --accent-gold: #fbbf24;
-  --accent-gold-hover: #f59e0b;
-}
-
-/* ==========================================================================
-   Base Core Elements
-   ========================================================================== */
-html {
-  scroll-behavior: smooth;
-  /* Prevent horizontal layout shifts on scrollbar toggle */
-  scrollbar-gutter: stable;
+  --success: #10b981;
 }
 
 body {
-  background-color: var(--paper);
+  background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-sans);
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* Text Selection */
-::selection {
-  background-color: var(--signal);
-  color: #ffffff;
-}
-
-/* Focus State Accessibility Standards */
-:focus-visible {
-  outline: 2px solid var(--signal);
-  outline-offset: 2px;
-}
-
-/* ==========================================================================
-   Typography Utility Classes
-   ========================================================================== */
 .font-display {
-  font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  font-family: var(--font-space-grotesk), sans-serif;
 }
 
 .font-mono-spec {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
+  font-family: var(--font-jetbrains-mono), monospace;
 }
 
-/* ==========================================================================
-   Surface & Glassmorphism Components
-   ========================================================================== */
-.surface-card {
-  background-color: var(--surface-subtle);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-card);
-  border-radius: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.surface-glass {
-  background-color: color-mix(in srgb, var(--surface-subtle) 75%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
-}
-
-/* ==========================================================================
-   Animations & Ticker Loop
-   ========================================================================== */
 @keyframes ticker {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 .ticker-track {
-  display: flex;
-  width: max-content;
-  animation: ticker 25s linear infinite;
-  will-change: transform;
+  animation: ticker 22s linear infinite;
 }
 
-.ticker-track:hover {
-  animation-play-state: paused;
-}
-
-/* ==========================================================================
-   Custom Scrollbar Styling
-   ========================================================================== */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--paper);
-}
-
-::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--steel) 30%, transparent);
-  border-radius: 9999px;
-  transition: background-color 0.2s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--steel);
-}
-
-/* Firefox Scrollbar Support */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--steel) 30%, transparent) var(--paper);
-}
-
-/* ==========================================================================
-   Accessibility Adjustments
-   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .ticker-track {
-    animation: none;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+  .ticker-track { animation: none; }
 }
