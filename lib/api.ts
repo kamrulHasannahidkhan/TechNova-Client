@@ -43,6 +43,11 @@ export async function getPerks() {
   return data || [];
 }
 
+export async function searchProducts(query: string) {
+  const data = await fetchWithRetry(`${API_URL}/products?search=${encodeURIComponent(query)}`);
+  return data || [];
+}
+
 export async function logCartAdd(item: { productId: string; name: string; price: number; quantity: number }) {
   try {
     await fetch(`${API_URL}/orders`, {
