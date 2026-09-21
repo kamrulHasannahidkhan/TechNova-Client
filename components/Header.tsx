@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { useCart } from "@/context/CartContext";
 import { getDepartments } from "@/lib/api";
@@ -52,7 +53,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-[var(--paper)] border-b border-[var(--line)] backdrop-blur-md transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col gap-3">
-        {/* Top Navbar Bar */}
+        {/* Top Bar: Brand Logo & User Actions */}
         <div className="flex items-center justify-between gap-4">
           {/* Brand Logo */}
           <Link
@@ -62,21 +63,6 @@ export default function Header() {
             Tech<span className="text-blue-600">Nova</span>
             <span className="text-blue-600">.</span>
           </Link>
-
-          {/* Search Input (Desktop) */}
-          <form
-            onSubmit={handleSearch}
-            className="hidden sm:flex flex-1 max-w-md relative"
-          >
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products or departments..."
-              className="w-full bg-[var(--surface-subtle)] text-[var(--ink)] placeholder:text-[var(--steel)] border border-[var(--line)] rounded-xl px-4 py-2 pl-10 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
-            />
-            <Search className="w-4 h-4 text-[var(--steel)] absolute left-3.5 top-1/2 -translate-y-1/2" />
-          </form>
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-3 shrink-0">
@@ -132,6 +118,100 @@ export default function Header() {
           </div>
         </div>
 
+        {/* Bottom Bar: Single Line Navigation + Right-Aligned Search Input */}
+        <div className="flex items-center justify-between gap-4 pt-1 border-t border-[var(--line)]/50">
+          <nav className="flex items-center gap-6 text-sm font-medium text-[var(--ink)] overflow-x-auto py-0.5">
+            {/* Departments Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={openDept}
+              onMouseLeave={scheduleCloseDept}
+            >
+              <button
+                type="button"
+                className="flex items-center gap-1.5 hover:text-blue-600 transition-colors whitespace-nowrap text-sm font-semibold"
+              >
+                <Grid className="w-4 h-4 text-blue-600" />
+                <span>Departments</span>
+                <ChevronDown className="w-3.5 h-3.5 text-[var(--steel)]" />
+              </button>
+
+              {/* Grid Menu Popup */}
+              {deptOpen && departments.length > 0 && (
+                <div className="absolute left-0 top-full mt-2 w-80 bg-[var(--paper)] border border-[var(--line)] rounded-2xl shadow-xl p-4 z-50 backdrop-blur-lg">
+                  <div className="grid grid-cols-4 gap-3">
+                    {departments.map((d: any) => (
+                      <Link
+                        key={d._id}
+                        href={`/department/${d._id}`}
+                        className="group flex flex-col items-center text-center"
+                      >
+                        <div className="w-12 h-12 rounded-full overflow-hidden bg-[var(--surface-subtle)] border border-[var(--line)] group-hover:border-blue-500 transition-all flex items-center justify-center">
+                          {d.image ? (
+                            <img
+                              src={d.image}
+                              alt={d.title}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
+                          ) : (
+                            <span className="text-xs font-bold text-[var(--steel)]">
+                              {d.title?.charAt(0)}
+                            </span>
+                          )}
+                        </div>
+                        <p className="mt-1.5 text-[11px] font-medium text-[var(--ink)] group-hover:text-blue-600 transition-colors line-clamp-2">
+                          {d.title}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <Link
+              href="/"
+              className="hover:text-blue-600 transition-colors whitespace-nowrap"
+            >
+              Home
+            </Link>
+            <Link
+              href="/new-arrivals"
+              className="flex items-center gap-1.5 hover:text-blue-600 transition-colors whitespace-nowrap"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              New Arrivals
+            </Link>
+            <Link
+              href="/exclusive"
+              className="hover:text-blue-600 transition-colors whitespace-nowrap"
+            >
+              Exclusive
+            </Link>
+            <Link
+              href="/best-sellers"
+              className="hover:text-blue-600 transition-colors whitespace-nowrap"
+            >
+              Best Sellers
+            </Link>
+          </nav>
+
+          {/* Search Input (Aligned to the far right on the same line) */}
+          <form
+            onSubmit={handleSearch}
+            className="relative hidden sm:flex items-center w-64 md:w-80 shrink-0"
+          >
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search..."
+              className="w-full bg-[var(--surface-subtle)] text-[var(--ink)] placeholder:text-[var(--steel)] border border-[var(--line)] rounded-xl px-3.5 py-1.5 pl-9 text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+            />
+            <Search className="w-3.5 h-3.5 text-[var(--steel)] absolute left-3 top-1/2 -translate-y-1/2" />
+          </form>
+        </div>
+
         {/* Mobile Search Input */}
         <form onSubmit={handleSearch} className="flex sm:hidden relative w-full">
           <input
@@ -139,69 +219,10 @@ export default function Header() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search products..."
-            className="w-full bg-[var(--surface-subtle)] text-[var(--ink)] placeholder:text-[var(--steel)] border border-[var(--line)] rounded-xl px-4 py-2 pl-10 text-sm focus:outline-none focus:border-blue-500 transition"
+            className="w-full bg-[var(--surface-subtle)] text-[var(--ink)] placeholder:text-[var(--steel)] border border-[var(--line)] rounded-xl px-3.5 py-1.5 pl-9 text-xs focus:outline-none focus:border-blue-500 transition"
           />
-          <Search className="w-4 h-4 text-[var(--steel)] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-[var(--steel)] absolute left-3 top-1/2 -translate-y-1/2" />
         </form>
-
-        {/* Navigation Link Items */}
-        <nav className="flex items-center gap-6 text-sm font-medium text-[var(--ink)] overflow-x-auto pt-1 pb-0.5 border-t border-[var(--line)]/50">
-          {/* Hover Department Menu */}
-          <div
-            className="relative"
-            onMouseEnter={openDept}
-            onMouseLeave={scheduleCloseDept}
-          >
-            <button
-              type="button"
-              className="flex items-center gap-1.5 hover:text-blue-600 transition-colors whitespace-nowrap text-sm font-semibold"
-            >
-              <Grid className="w-4 h-4 text-blue-600" />
-              <span>Departments</span>
-              <ChevronDown className="w-3.5 h-3.5 text-[var(--steel)]" />
-            </button>
-
-            {deptOpen && departments.length > 0 && (
-              <div className="absolute left-0 top-full mt-2 w-64 bg-[var(--paper)] border border-[var(--line)] rounded-2xl shadow-xl py-2 z-50 backdrop-blur-lg">
-                {departments.map((d: any) => (
-                  <Link
-                    key={d._id}
-                    href={`/department/${d._id}`}
-                    className="block px-4 py-2 text-sm text-[var(--ink)] hover:bg-[var(--surface-subtle)] hover:text-blue-600 transition-colors"
-                  >
-                    {d.title}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <Link
-            href="/"
-            className="hover:text-blue-600 transition-colors whitespace-nowrap"
-          >
-            Home
-          </Link>
-          <Link
-            href="/new-arrivals"
-            className="flex items-center gap-1.5 hover:text-blue-600 transition-colors whitespace-nowrap"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            New Arrivals
-          </Link>
-          <Link
-            href="/exclusive"
-            className="hover:text-blue-600 transition-colors whitespace-nowrap"
-          >
-            Exclusive
-          </Link>
-          <Link
-            href="/best-sellers"
-            className="hover:text-blue-600 transition-colors whitespace-nowrap"
-          >
-            Best Sellers
-          </Link>
-        </nav>
       </div>
     </header>
   );
