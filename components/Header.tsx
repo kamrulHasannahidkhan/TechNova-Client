@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { useCart } from "@/context/CartContext";
 import { getDepartments } from "@/lib/api";
@@ -52,9 +51,10 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[var(--paper)] border-b border-[var(--line)] backdrop-blur-md transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col gap-3">
-        {/* Top Bar: Brand Logo & User Actions */}
-        <div className="flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        
+        {/* Left Section: Brand Logo + Nav Links */}
+        <div className="flex items-center gap-6 lg:gap-8">
           {/* Brand Logo */}
           <Link
             href="/"
@@ -64,63 +64,8 @@ export default function Header() {
             <span className="text-blue-600">.</span>
           </Link>
 
-          {/* Right Action Buttons */}
-          <div className="flex items-center gap-3 shrink-0">
-            {session?.user ? (
-              <div className="flex items-center gap-2">
-                <Link
-                  href="/account"
-                  className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[var(--ink)] hover:text-blue-600 transition-colors px-2 py-1.5 rounded-lg"
-                >
-                  <User className="w-4 h-4 text-[var(--steel)]" />
-                  <span>{session.user.name?.split(" ")[0] || "Account"}</span>
-                </Link>
-                <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
-                  className="flex items-center gap-1 text-xs sm:text-sm font-medium text-[var(--steel)] hover:text-rose-500 transition-colors p-1.5 rounded-lg"
-                  title="Sign Out"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  href="/signin"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[var(--ink)] hover:text-blue-600 transition-colors px-3 py-2 rounded-xl"
-                >
-                  <LogIn className="w-4 h-4 text-[var(--steel)]" />
-                  Sign In
-                </Link>
-                <Link
-                  href="/signup"
-                  className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md transition-all active:scale-95"
-                >
-                  <UserPlus className="w-4 h-4 text-white" />
-                  Sign Up
-                </Link>
-              </div>
-            )}
-
-            {/* Shopping Cart Button */}
-            <Link
-              href="/cart"
-              className="relative p-2 rounded-xl text-[var(--ink)] hover:bg-[var(--surface-subtle)] border border-transparent hover:border-[var(--line)] transition-all flex items-center justify-center"
-              aria-label="Cart"
-            >
-              <ShoppingBag className="w-5 h-5 text-[var(--ink)]" />
-              {count > 0 && (
-                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
-                  {count}
-                </span>
-              )}
-            </Link>
-          </div>
-        </div>
-
-        {/* Bottom Bar: Single Line Navigation + Right-Aligned Search Input */}
-        <div className="flex items-center justify-between gap-4 pt-1 border-t border-[var(--line)]/50">
-          <nav className="flex items-center gap-6 text-sm font-medium text-[var(--ink)] overflow-x-auto py-0.5">
+          {/* Navigation Items */}
+          <nav className="hidden lg:flex items-center gap-5 text-sm font-medium text-[var(--ink)]">
             {/* Departments Dropdown */}
             <div
               className="relative"
@@ -129,7 +74,7 @@ export default function Header() {
             >
               <button
                 type="button"
-                className="flex items-center gap-1.5 hover:text-blue-600 transition-colors whitespace-nowrap text-sm font-semibold"
+                className="flex items-center gap-1.5 hover:text-blue-600 transition-colors whitespace-nowrap text-sm font-semibold py-2"
               >
                 <Grid className="w-4 h-4 text-blue-600" />
                 <span>Departments</span>
@@ -138,7 +83,7 @@ export default function Header() {
 
               {/* Grid Menu Popup */}
               {deptOpen && departments.length > 0 && (
-                <div className="absolute left-0 top-full mt-2 w-80 bg-[var(--paper)] border border-[var(--line)] rounded-2xl shadow-xl p-4 z-50 backdrop-blur-lg">
+                <div className="absolute left-0 top-full mt-1 w-80 bg-[var(--paper)] border border-[var(--line)] rounded-2xl shadow-xl p-4 z-50 backdrop-blur-lg">
                   <div className="grid grid-cols-4 gap-3">
                     {departments.map((d: any) => (
                       <Link
@@ -195,11 +140,14 @@ export default function Header() {
               Best Sellers
             </Link>
           </nav>
+        </div>
 
-          {/* Search Input (Aligned to the far right on the same line) */}
+        {/* Right Section: Compact Search Bar + Actions */}
+        <div className="flex items-center gap-3 shrink-0">
+          {/* Inline Search Bar */}
           <form
             onSubmit={handleSearch}
-            className="relative hidden sm:flex items-center w-64 md:w-80 shrink-0"
+            className="relative hidden sm:flex items-center w-48 md:w-60 lg:w-64"
           >
             <input
               type="text"
@@ -210,19 +158,59 @@ export default function Header() {
             />
             <Search className="w-3.5 h-3.5 text-[var(--steel)] absolute left-3 top-1/2 -translate-y-1/2" />
           </form>
+
+          {/* User Sign In/Up or Account */}
+          {session?.user ? (
+            <div className="flex items-center gap-2">
+              <Link
+                href="/account"
+                className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[var(--ink)] hover:text-blue-600 transition-colors px-2 py-1.5 rounded-lg"
+              >
+                <User className="w-4 h-4 text-[var(--steel)]" />
+                <span>{session.user.name?.split(" ")[0] || "Account"}</span>
+              </Link>
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="flex items-center gap-1 text-xs sm:text-sm font-medium text-[var(--steel)] hover:text-rose-500 transition-colors p-1.5 rounded-lg"
+                title="Sign Out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                href="/signin"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[var(--ink)] hover:text-blue-600 transition-colors px-3 py-2 rounded-xl"
+              >
+                <LogIn className="w-4 h-4 text-[var(--steel)]" />
+                Sign In
+              </Link>
+              <Link
+                href="/signup"
+                className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md transition-all active:scale-95"
+              >
+                <UserPlus className="w-4 h-4 text-white" />
+                Sign Up
+              </Link>
+            </div>
+          )}
+
+          {/* Cart Icon Button */}
+          <Link
+            href="/cart"
+            className="relative p-2 rounded-xl text-[var(--ink)] hover:bg-[var(--surface-subtle)] border border-transparent hover:border-[var(--line)] transition-all flex items-center justify-center"
+            aria-label="Cart"
+          >
+            <ShoppingBag className="w-5 h-5 text-[var(--ink)]" />
+            {count > 0 && (
+              <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                {count}
+              </span>
+            )}
+          </Link>
         </div>
 
-        {/* Mobile Search Input */}
-        <form onSubmit={handleSearch} className="flex sm:hidden relative w-full">
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search products..."
-            className="w-full bg-[var(--surface-subtle)] text-[var(--ink)] placeholder:text-[var(--steel)] border border-[var(--line)] rounded-xl px-3.5 py-1.5 pl-9 text-xs focus:outline-none focus:border-blue-500 transition"
-          />
-          <Search className="w-3.5 h-3.5 text-[var(--steel)] absolute left-3 top-1/2 -translate-y-1/2" />
-        </form>
       </div>
     </header>
   );
