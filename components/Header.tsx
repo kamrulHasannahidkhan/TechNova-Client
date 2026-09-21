@@ -67,52 +67,52 @@ export default function Header() {
           {/* Navigation Items */}
           <nav className="hidden lg:flex items-center gap-5 text-sm font-medium text-[var(--ink)]">
             {/* Departments Dropdown */}
-            <div
-              className="relative"
-              onMouseEnter={openDept}
-              onMouseLeave={scheduleCloseDept}
-            >
-              <button
-                type="button"
-                className="flex items-center gap-1.5 hover:text-blue-600 transition-colors whitespace-nowrap text-sm font-semibold py-2"
-              >
-                <Grid className="w-4 h-4 text-blue-600" />
-                <span>Departments</span>
-                <ChevronDown className="w-3.5 h-3.5 text-[var(--steel)]" />
-              </button>
+<div
+  className="relative"
+  onMouseEnter={openDept}
+  onMouseLeave={scheduleCloseDept}
+>
+  <button
+    type="button"
+    className="flex items-center gap-1.5 hover:text-blue-500 transition-colors whitespace-nowrap text-sm font-semibold py-2"
+  >
+    <Grid className="w-4 h-4 text-blue-500" />
+    <span>Departments</span>
+    <ChevronDown className="w-3.5 h-3.5 text-[var(--steel)]" />
+  </button>
 
-              {/* Grid Menu Popup */}
-              {deptOpen && departments.length > 0 && (
-                <div className="absolute left-0 top-full mt-1 w-80 bg-[var(--paper)] border border-[var(--line)] rounded-2xl shadow-xl p-4 z-50 backdrop-blur-lg">
-                  <div className="grid grid-cols-4 gap-3">
-                    {departments.map((d: any) => (
-                      <Link
-                        key={d._id}
-                        href={`/department/${d._id}`}
-                        className="group flex flex-col items-center text-center"
-                      >
-                        <div className="w-12 h-12 rounded-full overflow-hidden bg-[var(--surface-subtle)] border border-[var(--line)] group-hover:border-blue-500 transition-all flex items-center justify-center">
-                          {d.image ? (
-                            <img
-                              src={d.image}
-                              alt={d.title}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            />
-                          ) : (
-                            <span className="text-xs font-bold text-[var(--steel)]">
-                              {d.title?.charAt(0)}
-                            </span>
-                          )}
-                        </div>
-                        <p className="mt-1.5 text-[11px] font-medium text-[var(--ink)] group-hover:text-blue-600 transition-colors line-clamp-2">
-                          {d.title}
-                        </p>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
+  {/* Refined Popover Grid */}
+  {deptOpen && departments.length > 0 && (
+    <div className="absolute left-0 top-full mt-1 min-w-[280px] max-w-[380px] bg-[var(--surface-card)] border border-[var(--line)] rounded-2xl shadow-2xl p-3 z-50 backdrop-blur-xl">
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+        {departments.map((d: any) => (
+          <Link
+            key={d._id}
+            href={`/department/${d._id}`}
+            className="group flex flex-col items-center text-center p-2 rounded-xl hover:bg-[var(--surface-subtle)] transition-all duration-200"
+          >
+            <div className="w-11 h-11 rounded-full overflow-hidden bg-white border border-[var(--line)] group-hover:border-blue-500 group-hover:scale-105 shadow-sm transition-all duration-200 flex items-center justify-center p-1">
+              {d.image ? (
+                <img
+                  src={d.image}
+                  alt={d.title}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <span className="text-xs font-bold text-slate-700">
+                  {d.title?.charAt(0)}
+                </span>
               )}
             </div>
+            <p className="mt-2 text-[11px] font-medium text-[var(--ink)] leading-tight group-hover:text-blue-500 transition-colors line-clamp-2">
+              {d.title}
+            </p>
+          </Link>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
 
             <Link
               href="/"
