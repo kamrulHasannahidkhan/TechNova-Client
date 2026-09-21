@@ -35,7 +35,7 @@ export default function Header() {
         <div className="flex items-center gap-3">
           {/* Sign In Link */}
           <Link
-            href="/login"
+            href="/signin"
             className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[var(--ink)] hover:text-blue-600 transition-colors px-3 py-2 rounded-xl"
           >
             <LogIn className="w-4 h-4 text-[var(--steel)]" />
@@ -44,7 +44,7 @@ export default function Header() {
 
           {/* Sign Up Button (High Contrast Solid Pill) */}
           <Link
-            href="/register"
+            href="/signup"
             className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md transition-all active:scale-95"
           >
             <UserPlus className="w-4 h-4 text-white" />
