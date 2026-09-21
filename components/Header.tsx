@@ -66,7 +66,33 @@ export default function Header() {
 
           {/* Navigation Items */}
           <nav className="hidden lg:flex items-center gap-5 text-sm font-medium text-[var(--ink)]">
-            {/* Departments Dropdown */}
+           
+            <Link
+              href="/"
+              className="hover:text-blue-600 transition-colors whitespace-nowrap"
+            >
+              Home
+            </Link>
+            <Link
+              href="/new-arrivals"
+              className="flex items-center gap-1.5 hover:text-blue-600 transition-colors whitespace-nowrap"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              New Arrivals
+            </Link>
+            <Link
+              href="/exclusive"
+              className="hover:text-blue-600 transition-colors whitespace-nowrap"
+            >
+              Exclusive
+            </Link>
+            <Link
+              href="/best-sellers"
+              className="hover:text-blue-600 transition-colors whitespace-nowrap"
+            >
+              Best Sellers
+            </Link>
+             {/* Departments Dropdown */}
 <div
   className="relative"
   onMouseEnter={openDept}
@@ -114,31 +140,7 @@ export default function Header() {
   )}
 </div>
 
-            <Link
-              href="/"
-              className="hover:text-blue-600 transition-colors whitespace-nowrap"
-            >
-              Home
-            </Link>
-            <Link
-              href="/new-arrivals"
-              className="flex items-center gap-1.5 hover:text-blue-600 transition-colors whitespace-nowrap"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              New Arrivals
-            </Link>
-            <Link
-              href="/exclusive"
-              className="hover:text-blue-600 transition-colors whitespace-nowrap"
-            >
-              Exclusive
-            </Link>
-            <Link
-              href="/best-sellers"
-              className="hover:text-blue-600 transition-colors whitespace-nowrap"
-            >
-              Best Sellers
-            </Link>
+
           </nav>
         </div>
 
