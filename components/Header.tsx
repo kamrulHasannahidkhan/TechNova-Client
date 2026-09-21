@@ -60,8 +60,8 @@ export default function Header() {
             href="/"
             className="font-sans text-xl sm:text-2xl font-black tracking-tight text-[var(--ink)] hover:opacity-80 transition-opacity shrink-0"
           >
-            Tech<span className="text-blue-600">Nova</span>
-            <span className="text-blue-600">.</span>
+            <span className="text-blue-600">Tech</span>
+            <span className="text-Orange-600">Nova</span>
           </Link>
 
           {/* Navigation Items */}
