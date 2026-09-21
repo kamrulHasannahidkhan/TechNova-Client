@@ -11,7 +11,7 @@ export default function Header() {
           href="/" 
           className="font-sans text-xl sm:text-2xl font-black tracking-tight text-[var(--ink)] hover:opacity-80 transition-opacity"
         >
-          TechNova<span className="text-blue-600">.</span>
+          <span className="text-[--ink]">Tech</span><span className="text-orange-500">Nova</span>
         </Link>
 
         {/* Center Navigation Links */}
