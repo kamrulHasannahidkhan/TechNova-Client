@@ -86,12 +86,17 @@ export default function Header() {
         <div className="flex items-center gap-6 lg:gap-8">
           {/* Brand Logo */}
           <Link
-            href="/"
-            className="font-sans text-xl sm:text-2xl font-black tracking-tight text-white hover:opacity-80 transition-opacity shrink-0 flex items-center"
-          >
-          <img src="/TNlogo4.jpeg" alt="TechNova Logo" className="w-8 h-8 mr-2 rounded-md object-cover" />            <span className="text-white">Tech</span>
-            <span className="text-orange-500">Nova</span>
-          </Link>
+  href="/"
+  className="font-sans text-xl sm:text-2xl font-black tracking-tight text-white hover:opacity-80 transition-opacity shrink-0 flex items-center"
+>
+  <img 
+    src="/TNlogo4.jpeg" 
+    alt="TechNova Logo" 
+    className="w-8 h-8 mr-2 object-contain" 
+  />
+  <span className="text-white">Tech</span>
+  <span className="text-orange-500">Nova</span>
+</Link>
 
           {/* Navigation Items */}
           <nav className="hidden lg:flex items-center gap-5 text-sm font-medium text-slate-300">
