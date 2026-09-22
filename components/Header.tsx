@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useCart } from "@/context/CartContext";
-import { getDepartments } from "@/lib/api";
+import { getDepartments, searchProducts } from "@/lib/api";
 import {
   Sparkles,
   Search,
@@ -29,8 +29,36 @@ export default function Header() {
   const [deptOpen, setDeptOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestOpen, setSuggestOpen] = useState(false);
+  const searchBoxRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     getDepartments().then(setDepartments);
+  }, []);
+
+  useEffect(() => {
+    if (query.trim().length < 2) {
+      setSuggestions([]);
+      setSuggestOpen(false);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      const results = await searchProducts(query.trim());
+      setSuggestions(results.slice(0, 6));
+      setSuggestOpen(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target as Node)) {
+        setSuggestOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
   const openDept = () => {
@@ -45,6 +73,7 @@ export default function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
+      setSuggestOpen(false);
       router.push(`/search?q=${encodeURIComponent(query.trim())}`);
     }
   };
@@ -147,19 +176,49 @@ export default function Header() {
         {/* Right Section: Compact Search Bar + Actions */}
         <div className="flex items-center gap-3 shrink-0">
           {/* Inline Search Bar */}
-          <form
-            onSubmit={handleSearch}
-            className="relative hidden sm:flex items-center w-48 md:w-60 lg:w-64"
-          >
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search..."
-              className="w-full bg-[var(--surface-subtle)] text-[var(--ink)] placeholder:text-[var(--steel)] border border-[var(--line)] rounded-xl px-3.5 py-1.5 pl-9 text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
-            />
-            <Search className="w-3.5 h-3.5 text-[var(--steel)] absolute left-3 top-1/2 -translate-y-1/2" />
-          </form>
+          <div ref={searchBoxRef} className="relative hidden sm:block w-48 md:w-60 lg:w-64">
+            <form
+              onSubmit={handleSearch}
+              className="relative flex items-center w-full"
+            >
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onFocus={() => suggestions.length > 0 && setSuggestOpen(true)}
+                placeholder="Search..."
+                className="w-full bg-[var(--surface-subtle)] text-[var(--ink)] placeholder:text-[var(--steel)] border border-[var(--line)] rounded-xl px-3.5 py-1.5 pl-9 text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+              />
+              <Search className="w-3.5 h-3.5 text-[var(--steel)] absolute left-3 top-1/2 -translate-y-1/2" />
+            </form>
+
+            {suggestOpen && suggestions.length > 0 && (
+              <div className="absolute left-0 top-full mt-1 w-72 sm:w-80 bg-[var(--surface-card)] border border-[var(--line)] rounded-2xl shadow-2xl py-2 z-50 backdrop-blur-xl max-h-80 overflow-y-auto">
+                {suggestions.map((p: any) => (
+                  <Link
+                    key={p._id}
+                    href={`/department/${p.department?._id}/${p._id}`}
+                    onClick={() => setSuggestOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2 hover:bg-[var(--surface-subtle)] transition-colors"
+                  >
+                    {p.images?.[0] && (
+                      <img src={p.images[0]} alt="" className="w-9 h-9 object-contain rounded bg-white border border-[var(--line)] shrink-0" />
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-sm text-[var(--ink)] truncate">{p.name}</p>
+                      <p className="text-xs text-[var(--steel)]">৳{p.price?.toLocaleString()}</p>
+                    </div>
+                  </Link>
+                ))}
+                <button
+                  onClick={(e) => { e.preventDefault(); handleSearch(e); }}
+                  className="w-full text-left px-3 py-2 text-sm text-blue-600 font-medium hover:bg-[var(--surface-subtle)] transition-colors border-t border-[var(--line)] mt-1"
+                >
+                  See all results for &quot;{query}&quot;
+                </button>
+              </div>
+            )}
+          </div>
 
           {/* User Sign In/Up or Account */}
           {session?.user ? (
