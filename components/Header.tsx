@@ -89,8 +89,7 @@ export default function Header() {
             href="/"
             className="font-sans text-xl sm:text-2xl font-black tracking-tight text-white hover:opacity-80 transition-opacity shrink-0 flex items-center"
           >
-            <img src="/TNlogo4.jpeg" alt="TechNova Logo" className="w-8 h-8 mr-2 rounded-md object-cover" />
-            <span className="text-white">Tech</span>
+          <img src="/TNlogo4.png" alt="TechNova Logo" className="w-8 h-8 mr-2 rounded-md object-cover" />            <span className="text-white">Tech</span>
             <span className="text-orange-500">Nova</span>
           </Link>
 
