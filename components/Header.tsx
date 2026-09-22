@@ -79,7 +79,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-slate-800 border-b border-slate-950/50 backdrop-blur-md transition-colors duration-200 text-slate-100">
+    <header className="sticky top-0 z-50 w-full bg-navy-800 border-b border-slate-950/50 backdrop-blur-md transition-colors duration-200 text-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         
         {/* Left Section: Brand Logo + Nav Links */}
