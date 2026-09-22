@@ -79,7 +79,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-slate-800 border-b border-slate-950/50 backdrop-blur-md transition-colors duration-200 text-slate-100">
+    <header className="sticky top-0 z-50 w-full bg-slate-850 border-b border-slate-950/50 backdrop-blur-md transition-colors duration-200 text-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         
         {/* Left Section: Brand Logo + Nav Links */}
@@ -89,7 +89,7 @@ export default function Header() {
             href="/"
             className="font-sans text-xl sm:text-2xl font-black tracking-tight text-white hover:opacity-80 transition-opacity shrink-0 flex items-center"
           >
-            <img src="/TNlogo.jpeg" alt="TechNova Logo" className="w-8 h-8 mr-2 rounded-md object-cover" />
+            <img src="/TNlogo3.jpeg" alt="TechNova Logo" className="w-8 h-8 mr-2 rounded-md object-cover" />
             <span className="text-white">Tech</span>
             <span className="text-orange-500">Nova</span>
           </Link>
