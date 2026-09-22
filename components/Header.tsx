@@ -88,7 +88,7 @@ export default function Header() {
           <Link
             href="/"
             className="font-sans text-xl sm:text-2xl font-black tracking-tight text-[var(--ink)] hover:opacity-80 transition-opacity shrink-0"
-          >
+          > <image src="TNlogo.jpeg" alt="TechNova Logo" className="w-8 h-8 mr-2 inline-block" />
             <span className="text-White-600">Tech</span>
             <span className="text-orange-600">Nova</span>
           </Link>
