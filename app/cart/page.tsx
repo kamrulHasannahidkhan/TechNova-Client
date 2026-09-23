@@ -175,11 +175,8 @@ export default function CartPage() {
           </Link>
 
           <div className="p-3.5 rounded-xl border border-gray-200 bg-gray-50 font-mono-spec text-[11px] text-gray-600 space-y-1.5">
-            <div className="flex items-center gap-1.5 text-gray-900 font-semibold">
-              <span className="text-[--signal]">✓</span> Guaranteed Delivery
-            </div>
+           
             <p className="leading-normal">
-              Orders placed before 4:00 PM ship out the same day.
             </p>
           </div>
         </div>

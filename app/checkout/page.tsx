@@ -4,14 +4,29 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useSession } from "next-auth/react";
 import { submitOrder } from "@/lib/api";
+import {
+  CheckCircle2,
+  Truck,
+  MapPin,
+  ShoppingBag,
+  ArrowRight,
+  ShieldCheck,
+  CreditCard,
+} from "lucide-react";
 
 const SHIPPING_OPTIONS = [
   { key: "inside", label: "Inside Dhaka City", price: 70 },
   { key: "outside", label: "Outside Dhaka", price: 130 },
-  { key: "free", label: "Free Delivery", price: 0 },
 ];
 
-type SavedAddress = { _id: string; label: string; fullName: string; phone: string; address: string; district: string };
+type SavedAddress = {
+  _id: string;
+  label: string;
+  fullName: string;
+  phone: string;
+  address: string;
+  district: string;
+};
 
 export default function CheckoutPage() {
   const { items, total, clearCart, isHydrated } = useCart();
@@ -31,17 +46,18 @@ export default function CheckoutPage() {
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [shipping, setShipping] = useState("inside");
-  const [createAccount, setCreateAccount] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [placed, setPlaced] = useState(false);
 
   useEffect(() => {
     if (!user) return;
-    setForm((f) => ({ ...f, email: user.email }));
+    setForm((f) => ({ ...f, email: user.email || "" }));
 
     fetch("/api/account/addresses-list")
       .then((r) => (r.ok ? r.json() : null))
-      .then((data) => { if (Array.isArray(data)) setSavedAddresses(data); })
+      .then((data) => {
+        if (Array.isArray(data)) setSavedAddresses(data);
+      })
       .catch(() => {});
   }, [user]);
 
@@ -60,11 +76,22 @@ export default function CheckoutPage() {
 
   if (items.length === 0 && !placed) {
     return (
-      <div className="max-w-2xl mx-auto px-6 py-24 text-center">
-        <h1 className="font-display text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h1>
-        <p className="text-gray-500 text-sm mb-6">Add something to your cart before checking out.</p>
-        <button onClick={() => router.push("/")} className="bg-black text-white px-6 py-3 rounded-xl font-semibold">
+      <div className="max-w-xl mx-auto px-6 py-24 text-center">
+        <div className="w-16 h-16 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-5 border border-blue-500/20">
+          <ShoppingBag className="w-8 h-8" />
+        </div>
+        <h1 className="font-sans text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+          Your cart is empty
+        </h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
+          Add something to your cart before checking out.
+        </p>
+        <button
+          onClick={() => router.push("/")}
+          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md active:scale-95 text-sm"
+        >
           Continue Shopping
+          <ArrowRight className="w-4 h-4" />
         </button>
       </div>
     );
@@ -78,7 +105,12 @@ export default function CheckoutPage() {
     setPlacing(true);
     try {
       await submitOrder({
-        items: items.map((i) => ({ productId: i._id, name: i.name, price: i.price, quantity: i.quantity })),
+        items: items.map((i) => ({
+          productId: i._id,
+          name: i.name,
+          price: i.price,
+          quantity: i.quantity,
+        })),
         customer: {
           fullName: form.fullName,
           phone: form.phone,
@@ -103,15 +135,21 @@ export default function CheckoutPage() {
 
   if (placed) {
     return (
-      <div className="max-w-2xl mx-auto px-6 py-24 text-center">
-        <div className="w-14 h-14 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto mb-4 text-2xl">
-          ✓
+      <div className="max-w-lg mx-auto px-6 py-24 text-center">
+        <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+          <CheckCircle2 className="w-10 h-10" />
         </div>
-        <h1 className="font-display text-2xl font-bold text-gray-900 mb-2">Order placed!</h1>
-        <p className="text-gray-500 text-sm mb-6">
-          Thanks, {form.fullName || "friend"} — we&apos;ll call {form.phone || "you"} soon to confirm your order.
+        <h1 className="font-sans text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+          Order Placed Successfully!
+        </h1>
+        <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 leading-relaxed">
+          Thanks, <span className="font-semibold text-slate-900 dark:text-slate-200">{form.fullName || "friend"}</span> — we&apos;ll call{" "}
+          <span className="font-semibold text-slate-900 dark:text-slate-200">{form.phone || "you"}</span> soon to confirm your order details.
         </p>
-        <button onClick={() => router.push("/")} className="bg-black text-white px-6 py-3 rounded-xl font-semibold">
+        <button
+          onClick={() => router.push("/")}
+          className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md active:scale-95 text-sm"
+        >
           Back to Home
         </button>
       </div>
@@ -119,196 +157,252 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12">
-      <div className="border-2 border-dashed border-yellow-400 rounded-2xl p-1 mb-6">
-        <p className="text-center text-xs font-semibold text-yellow-700 py-1">Cash on delivery available across Bangladesh</p>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 md:py-12">
+      {/* Cash on delivery notice banner */}
+      <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-3 mb-8 flex items-center justify-center gap-2 text-amber-700 dark:text-amber-400 text-xs sm:text-sm font-semibold">
+        <Truck className="w-4 h-4 shrink-0" />
+        <span>Cash on Delivery is available across all 64 districts of Bangladesh</span>
       </div>
 
-      <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-8 items-start">
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="grid lg:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Customer & Shipping Details */}
+        <div className="lg:col-span-7 bg-white dark:bg-[#112240] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm dark:shadow-2xl">
+          <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <h2 className="font-sans font-bold text-lg text-slate-900 dark:text-slate-100">
+              Shipping & Customer Details
+            </h2>
+          </div>
+
           {user && savedAddresses.length > 0 && (
-            <div>
-              <p className="text-sm font-semibold text-gray-900 mb-2">Use a saved address</p>
-              <div className="flex flex-col gap-2 mb-2">
+            <div className="space-y-3">
+              <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                Saved Addresses
+              </p>
+              <div className="grid gap-2">
                 {savedAddresses.map((addr) => (
                   <button
                     key={addr._id}
                     type="button"
                     onClick={() => useAddress(addr)}
-                    className={`text-left border rounded-lg px-3.5 py-2.5 text-sm transition ${
+                    className={`text-left border rounded-xl p-3 text-xs sm:text-sm transition-all ${
                       selectedAddressId === addr._id
-                        ? "border-black bg-gray-50"
-                        : "border-gray-300 hover:border-gray-400"
+                        ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30 text-blue-900 dark:text-blue-100 ring-1 ring-blue-500"
+                        : "border-slate-200 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 bg-slate-50/50 dark:bg-[#0a192f]/50 text-slate-700 dark:text-slate-300"
                     }`}
                   >
-                    <span className="font-semibold">{addr.label}</span> — {addr.fullName}, {addr.address}, {addr.district}
+                    <span className="font-bold text-slate-900 dark:text-white mr-1.5">{addr.label}:</span>
+                    {addr.fullName}, {addr.address}, {addr.district}
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-gray-400">Or fill in a different address below.</p>
-              <hr className="border-gray-200 mt-3" />
+              <p className="text-xs text-slate-400">Or enter a new shipping address below:</p>
+              <hr className="border-slate-200 dark:border-slate-800" />
             </div>
           )}
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-1.5">Full Name *</label>
-            <input
-              required
-              className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition"
-              value={form.fullName}
-              onChange={(e) => { setForm({ ...form, fullName: e.target.value }); setSelectedAddressId(null); }}
-            />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Full Name *
+              </label>
+              <input
+                required
+                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
+                value={form.fullName}
+                onChange={(e) => {
+                  setForm({ ...form, fullName: e.target.value });
+                  setSelectedAddressId(null);
+                }}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Mobile Phone *
+              </label>
+              <input
+                required
+                placeholder="01XXXXXXXXX"
+                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
+                value={form.phone}
+                onChange={(e) => {
+                  setForm({ ...form, phone: e.target.value });
+                  setSelectedAddressId(null);
+                }}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Email Address *
+              </label>
+              <input
+                required
+                type="email"
+                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Delivery Address *
+              </label>
+              <input
+                required
+                placeholder="House, Road, Area, Landmark"
+                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
+                value={form.address}
+                onChange={(e) => {
+                  setForm({ ...form, address: e.target.value });
+                  setSelectedAddressId(null);
+                }}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                District *
+              </label>
+              <select
+                required
+                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
+                value={form.district}
+                onChange={(e) => {
+                  setForm({ ...form, district: e.target.value });
+                  setSelectedAddressId(null);
+                }}
+              >
+                <option value="">Select District</option>
+                <option>Dhaka</option>
+                <option>Chattogram</option>
+                <option>Khulna</option>
+                <option>Rajshahi</option>
+                <option>Sylhet</option>
+                <option>Barishal</option>
+                <option>Rangpur</option>
+                <option>Mymensingh</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Country
+              </label>
+              <select
+                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
+                value={form.country}
+                onChange={(e) => setForm({ ...form, country: e.target.value })}
+              >
+                <option>Bangladesh</option>
+              </select>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-1.5">Phone *</label>
-            <input
-              required
-              placeholder="Enter your 11-digit mobile number."
-              className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition"
-              value={form.phone}
-              onChange={(e) => { setForm({ ...form, phone: e.target.value }); setSelectedAddressId(null); }}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-1.5">Email *</label>
-            <input
-              required
-              type="email"
-              className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-1.5">Country / Region *</label>
-            <select
-              className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition"
-              value={form.country}
-              onChange={(e) => setForm({ ...form, country: e.target.value })}
-            >
-              <option>Bangladesh</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-1.5">Delivery Address *</label>
-            <input
-              required
-              placeholder="Enter your Full Address"
-              className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition"
-              value={form.address}
-              onChange={(e) => { setForm({ ...form, address: e.target.value }); setSelectedAddressId(null); }}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-1.5">District name *</label>
-            <select
-              required
-              className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition"
-              value={form.district}
-              onChange={(e) => { setForm({ ...form, district: e.target.value }); setSelectedAddressId(null); }}
-            >
-              <option value="">Select your District</option>
-              <option>Dhaka</option>
-              <option>Chattogram</option>
-              <option>Khulna</option>
-              <option>Rajshahi</option>
-              <option>Sylhet</option>
-              <option>Barishal</option>
-              <option>Rangpur</option>
-              <option>Mymensingh</option>
-            </select>
-          </div>
-
-          {!user && (
-            <label className="flex items-center gap-2 text-sm text-gray-700">
-              <input type="checkbox" checked={createAccount} onChange={(e) => setCreateAccount(e.target.checked)} />
-              Create an account?
+          <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              Order Notes (Optional)
             </label>
-          )}
-
-          <div className="pt-2">
-            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-2">Additional Information</h3>
-            <label className="block text-sm text-gray-700 mb-1.5">Order notes (optional)</label>
             <textarea
-              rows={4}
-              placeholder="Notes about your order, e.g. special notes for delivery."
-              className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-black transition resize-none"
+              rows={3}
+              placeholder="Notes about your order, e.g. special instructions for delivery."
+              className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition resize-none"
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
             />
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 sticky top-6">
-          <h2 className="font-display font-bold text-lg text-gray-900 mb-4">YOUR ORDER</h2>
+        {/* Right Column: Order Summary & Review */}
+        <div className="lg:col-span-5 bg-white dark:bg-[#112240] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-5 sticky top-6 shadow-sm dark:shadow-2xl">
+          <h2 className="font-sans font-bold text-lg text-slate-900 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">
+            Order Summary
+          </h2>
 
-          <div className="flex justify-between text-xs font-bold text-gray-500 uppercase tracking-wide border-b border-gray-200 pb-2 mb-3">
-            <span>Product</span>
-            <span>Subtotal</span>
-          </div>
-
-          <div className="space-y-3 mb-4">
+          <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
             {items.map((item) => (
-              <div key={item._id} className="flex justify-between text-sm">
-                <span className="text-gray-700">
-                  {item.name} <span className="text-gray-400">× {item.quantity}</span>
+              <div key={item._id} className="flex justify-between text-xs sm:text-sm items-center">
+                <span className="text-slate-700 dark:text-slate-300 truncate max-w-[200px]">
+                  {item.name} <span className="text-slate-400 dark:text-slate-500 font-medium">× {item.quantity}</span>
                 </span>
-                <span className="font-medium text-gray-900">৳{(item.price * item.quantity).toLocaleString()}</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">
+                  ৳{(item.price * item.quantity).toLocaleString()}
+                </span>
               </div>
             ))}
           </div>
 
-          <div className="flex justify-between text-sm font-semibold text-gray-900 border-t border-gray-200 pt-3">
-            <span>Subtotal</span>
-            <span>৳{total.toLocaleString()}</span>
-          </div>
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-3 space-y-2 text-xs sm:text-sm">
+            <div className="flex justify-between text-slate-600 dark:text-slate-400">
+              <span>Subtotal</span>
+              <span className="font-semibold text-slate-900 dark:text-slate-200">
+                ৳{total.toLocaleString()}
+              </span>
+            </div>
 
-          <div className="mt-4">
-            <p className="text-sm font-semibold text-gray-900 mb-2">Shipment</p>
-            <div className="space-y-2">
-              {SHIPPING_OPTIONS.map((opt) => (
-                <label key={opt.key} className="flex items-center justify-between text-sm cursor-pointer">
-                  <span className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="shipping"
-                      checked={shipping === opt.key}
-                      onChange={() => setShipping(opt.key)}
-                    />
-                    <span className="font-medium text-gray-900">{opt.label}</span>
-                  </span>
-                  <span className="text-gray-600">{opt.price === 0 ? "Free" : `৳${opt.price}`}</span>
-                </label>
-              ))}
+            <div className="pt-2">
+              <span className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
+                Shipping Location
+              </span>
+              <div className="space-y-2">
+                {SHIPPING_OPTIONS.map((opt) => (
+                  <label
+                    key={opt.key}
+                    className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
+                      shipping === opt.key
+                        ? "border-blue-500 bg-blue-50/50 dark:bg-blue-950/20 text-slate-900 dark:text-slate-100"
+                        : "border-slate-200 dark:border-slate-800 hover:border-slate-300 text-slate-600 dark:text-slate-400"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2 text-xs font-semibold">
+                      <input
+                        type="radio"
+                        name="shipping"
+                        checked={shipping === opt.key}
+                        onChange={() => setShipping(opt.key)}
+                        className="accent-blue-600"
+                      />
+                      {opt.label}
+                    </span>
+                    <span className="text-xs font-bold">৳{opt.price}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="flex justify-between text-base font-bold text-gray-900 border-t border-gray-200 mt-4 pt-3">
-            <span>Total</span>
-            <span>৳{grandTotal.toLocaleString()}</span>
+          <div className="flex justify-between text-base font-extrabold text-slate-900 dark:text-white border-t border-slate-200 dark:border-slate-800 pt-4">
+            <span>Total Amount</span>
+            <span className="text-xl text-blue-600 dark:text-blue-400">
+              ৳{grandTotal.toLocaleString()}
+            </span>
           </div>
 
-          <div className="mt-4 text-sm">
-            <p className="font-semibold text-gray-900">Cash on delivery</p>
-            <p className="text-gray-500">Pay with cash upon delivery.</p>
+          {/* Payment Method Badge */}
+          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0a192f] border border-slate-200 dark:border-slate-800 space-y-1">
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-200">
+              <CreditCard className="w-4 h-4 text-emerald-500" />
+              <span>Cash on Delivery</span>
+            </div>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              Pay with cash when your product arrives at your doorstep.
+            </p>
           </div>
 
           <button
             type="submit"
             disabled={placing}
-            className="w-full mt-5 bg-black text-white font-bold py-3.5 rounded-xl hover:bg-gray-800 transition disabled:opacity-50"
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-50 text-sm tracking-wide"
           >
-            {placing ? "Placing order..." : "PLACE ORDER"}
+            {placing ? "Placing Order..." : "PLACE ORDER NOW"}
           </button>
 
-          <p className="text-xs text-gray-400 mt-3 leading-relaxed">
-            Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.
-          </p>
+          <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 dark:text-slate-500 pt-1">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Secure 256-bit Encrypted Checkout</span>
+          </div>
         </div>
       </form>
     </div>
