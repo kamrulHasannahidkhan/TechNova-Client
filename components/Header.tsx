@@ -240,12 +240,12 @@ export default function Header() {
             </div>
           ) : (
             <Link
-              href="/login"
-              className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md transition-all active:scale-95"
-            >
-              <LogIn className="w-4 h-4 text-white" />
-              Login
-            </Link>
+      href="/login"
+      className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md transition-all active:scale-95"
+    >
+      <LogIn className="w-4 h-4 text-white" />
+      Login
+    </Link>
           )}
 
           {/* Cart Icon Button */}
