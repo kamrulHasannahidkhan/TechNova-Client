@@ -220,7 +220,7 @@ export default function Header() {
             )}
           </div>
 
-          {/* User Sign In/Up or Account */}
+          {/* User Account or single Login button */}
           {session?.user ? (
             <div className="flex items-center gap-2">
               <Link
@@ -239,22 +239,13 @@ export default function Header() {
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <Link
-                href="/signin"
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-200 hover:text-blue-400 transition-colors px-3 py-2 rounded-xl"
-              >
-                <LogIn className="w-4 h-4 text-slate-400" />
-                Sign In
-              </Link>
-              <Link
-                href="/signup"
-                className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md transition-all active:scale-95"
-              >
-                <UserPlus className="w-4 h-4 text-white" />
-                Sign Up
-              </Link>
-            </div>
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md transition-all active:scale-95"
+            >
+              <LogIn className="w-4 h-4 text-white" />
+              Login
+            </Link>
           )}
 
           {/* Cart Icon Button */}
