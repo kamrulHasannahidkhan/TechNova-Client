@@ -19,6 +19,29 @@ const SHIPPING_OPTIONS = [
   { key: "outside", label: "Outside Dhaka", price: 130 },
 ];
 
+const DIVISIONS = [
+  "Barishal",
+  "Chattogram",
+  "Dhaka",
+  "Khulna",
+  "Mymensingh",
+  "Rajshahi",
+  "Rangpur",
+  "Sylhet",
+];
+
+const DISTRICTS_64 = [
+  "Bagerhat", "Bandarban", "Barguna", "Barishal", "Bhola", "Bogra", "Brahmanbaria",
+  "Chandpur", "Chattogram", "Chuadanga", "Cox's Bazar", "Cumilla", "Dhamrai", "Dinajpur",
+  "Faridpur", "Feni", "Gaibandha", "Gazipur", "Gopalganj", "Habiganj", "Jamalpur",
+  "Jeshore", "Jhalokati", "Jhenaidah", "Joypurhat", "Khagrachhari", "Khulna", "Kishoreganj",
+  "Kurigram", "Kushtia", "Lakshmipur", "Lalmonirhat", "Madaripur", "Magura", "Manikganj",
+  "Meherpur", "Moulvibazar", "Munshiganj", "Mymensingh", "Naogaon", "Narail", "Narayanganj",
+  "Narsingdi", "Natore", "Nawabganj", "Netrokona", "Nilphamari", "Noakhali", "Pabna",
+  "Panchagarh", "Patuakhali", "Pirojpur", "Rajbari", "Rajshahi", "Rangamati", "Rangpur",
+  "Satkhira", "Shariatpur", "Sherpur", "Sirajganj", "Sunamganj", "Sylhet", "Tangail", "Thakurgaon"
+];
+
 type SavedAddress = {
   _id: string;
   label: string;
@@ -38,9 +61,9 @@ export default function CheckoutPage() {
     fullName: "",
     phone: "",
     email: "",
-    country: "Bangladesh",
-    address: "",
+    division: "",
     district: "",
+    address: "",
     notes: "",
   });
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
@@ -115,8 +138,9 @@ export default function CheckoutPage() {
           fullName: form.fullName,
           phone: form.phone,
           email: form.email,
-          address: form.address,
+          division: form.division,
           district: form.district,
+          address: form.address,
           notes: form.notes,
         },
         shippingOption: SHIPPING_OPTIONS.find((s) => s.key === shipping)?.label,
@@ -246,20 +270,26 @@ export default function CheckoutPage() {
               />
             </div>
 
-            <div className="sm:col-span-2">
+            <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                Delivery Address *
+                Division *
               </label>
-              <input
+              <select
                 required
-                placeholder="House, Road, Area, Landmark"
                 className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
-                value={form.address}
+                value={form.division}
                 onChange={(e) => {
-                  setForm({ ...form, address: e.target.value });
+                  setForm({ ...form, division: e.target.value });
                   setSelectedAddressId(null);
                 }}
-              />
+              >
+                <option value="">Select Division</option>
+                {DIVISIONS.map((div) => (
+                  <option key={div} value={div}>
+                    {div}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -276,28 +306,28 @@ export default function CheckoutPage() {
                 }}
               >
                 <option value="">Select District</option>
-                <option>Dhaka</option>
-                <option>Chattogram</option>
-                <option>Khulna</option>
-                <option>Rajshahi</option>
-                <option>Sylhet</option>
-                <option>Barishal</option>
-                <option>Rangpur</option>
-                <option>Mymensingh</option>
+                {DISTRICTS_64.map((dist) => (
+                  <option key={dist} value={dist}>
+                    {dist}
+                  </option>
+                ))}
               </select>
             </div>
 
-            <div>
+            <div className="sm:col-span-2">
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                Country
+                Delivery Address *
               </label>
-              <select
+              <input
+                required
+                placeholder="House, Road, Area, Thana/Upazila"
                 className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
-                value={form.country}
-                onChange={(e) => setForm({ ...form, country: e.target.value })}
-              >
-                <option>Bangladesh</option>
-              </select>
+                value={form.address}
+                onChange={(e) => {
+                  setForm({ ...form, address: e.target.value });
+                  setSelectedAddressId(null);
+                }}
+              />
             </div>
           </div>
 
