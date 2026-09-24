@@ -201,10 +201,10 @@ export default async function Footer() {
               <span>+8801813335789 </span>
             </li>
             
-            <li className="flex items-center gap-2">
+           { /*<li className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-blue-500 shrink-0" />
               <span></span>
-            </li>
+            </li>*/}
           </ul>
 
           {/* Social Icons Bar */}
