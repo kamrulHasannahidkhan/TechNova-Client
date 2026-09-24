@@ -190,23 +190,20 @@ export default async function Footer() {
           <ul className="space-y-3 text-slate-400 text-xs">
             <li className="flex items-start gap-2">
               <MapPin className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-              <span>Shop 440 & 441, 3rd Floor, Farmview SuperMarket, Farmgate, Dhaka 1215</span>
+              <span>New eskaton road Dhaka postal code 1217</span>
             </li>
             <li className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-blue-500 shrink-0" />
-              <span>+8801717062205 (Info)</span>
+              <span>+88001606586207 </span>
             </li>
             <li className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-blue-500 shrink-0" />
-              <span>+8801641757175 (Store)</span>
+              <span>+8801813335789 </span>
             </li>
-            <li className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-blue-500 shrink-0" />
-              <span>+8801919646416 (Delivery)</span>
-            </li>
+            
             <li className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-blue-500 shrink-0" />
-              <span>info@electronics.com.bd</span>
+              <span></span>
             </li>
           </ul>
 
