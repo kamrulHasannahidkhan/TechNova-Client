@@ -70,15 +70,14 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
                 alt={s.title || "Slider Background"}
                 fill
                 priority={i === 0}
-                className="object-cover object-center scale-105 transition-transform duration-10000 ease-linear"
+                className="object-cover object-center"
               />
             ) : (
               <div className="w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black" />
             )}
 
-            {/* Dark Gradient Overlay for Contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/75 to-transparent z-10" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-slate-950/20 z-10" />
+            {/* Lighter Gradient Overlay for Contrast & Brightness */}
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/40 to-transparent z-10" />
 
             {/* Content Container */}
             <div className="relative z-20 max-w-2xl px-6 sm:px-12 md:px-16 py-12 flex flex-col items-start justify-center min-h-[480px] md:min-h-[580px]">
