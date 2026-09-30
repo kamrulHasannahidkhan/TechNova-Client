@@ -239,11 +239,11 @@ export default function Header() {
               </button>
             </div>
           ) : (
-            <Link
+           <Link
   href="/login"
-  className="relative inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-200 group"
+  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors group"
 >
-  <LogIn className="w-4 h-4 text-blue-100 group-hover:translate-x-0.5 transition-transform duration-200" />
+  <LogIn className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors" />
   <span>Login</span>
 </Link>
           )}
