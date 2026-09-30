@@ -241,9 +241,9 @@ export default function Header() {
           ) : (
            <Link
   href="/login"
-  className="inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-medium text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors group"
+  className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
 >
-  <LogIn className="w-3 h-3 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors" />
+  <LogIn className="w-3 h-3" />
   <span>Login</span>
 </Link>
           )}
