@@ -21,7 +21,7 @@ export default function SignUpPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -38,7 +38,7 @@ export default function SignUpPage() {
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, phone, password }),
+      body: JSON.stringify({ name, email, password }),
     });
     const data = await res.json();
 
@@ -63,8 +63,6 @@ export default function SignUpPage() {
           value={name} onChange={(e) => setName(e.target.value)} />
         <input type="email" required placeholder="Email" className="border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm"
           value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="tel" required placeholder="Phone number" className="border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm"
-          value={phone} onChange={(e) => setPhone(e.target.value)} />
 
         <div>
           <input type="password" required placeholder="Password" minLength={6}
