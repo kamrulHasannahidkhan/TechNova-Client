@@ -33,13 +33,6 @@ export default async function DepartmentsSection() {
           </h2>
         </div>
 
-        <Link
-          href="/departments"
-          className="group flex items-center gap-1 text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-        >
-          <span>View All</span>
-          <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
       </div>
 
       {/* Departments Icon Grid */}
