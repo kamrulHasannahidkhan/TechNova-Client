@@ -209,7 +209,7 @@ export default async function Footer() {
 
           {/* Social Icons Bar */}
           <div className="flex items-center gap-2 mt-6">
-            {["f", "yt", "ig", "in", "X", "p"].map((icon, i) => (
+            {["f",  "ig"].map((icon, i) => (
               <a
                 key={i}
                 href="#"
