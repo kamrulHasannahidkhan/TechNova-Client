@@ -166,20 +166,7 @@ export default async function Footer() {
           </p>
 
           {/* Payment Badges */}
-          <div className="flex flex-wrap items-center gap-1.5 font-bold text-[10px]">
-            <span className="px-2 py-1 bg-slate-900 border border-slate-800 text-pink-500 rounded italic font-black">
-              bkash
-            </span>
-            <span className="px-2 py-1 bg-slate-900 border border-slate-800 text-orange-400 rounded">
-              nogod 
-            </span>
-            <span className="px-2 py-1 bg-slate-900 border border-slate-800 text-purple-400 rounded">
-              Rocket
-            </span>
-            <span className="px-2 py-1 bg-slate-900 border border-slate-800 text-amber-400 rounded">
-              UPay
-            </span>
-          </div>
+          
         </div>
       </div>
     </footer>
