@@ -33,76 +33,10 @@ export default async function Footer() {
             {tagline}
           </p>
 
-          <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2 pt-2">
-            <a
-              href="#"
-              className="flex items-center gap-2.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-white px-3 py-2 rounded-xl transition-all shadow-sm active:scale-95"
-            >
-              <Play className="w-4 h-4 text-blue-500 fill-blue-500" />
-              <div className="text-left">
-                <div className="text-[9px] uppercase tracking-wider text-slate-400 font-mono">
-                  Get it on
-                </div>
-                <div className="text-xs font-semibold leading-none text-white">
-                  Google Play
-                </div>
-              </div>
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-2.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-white px-3 py-2 rounded-xl transition-all shadow-sm active:scale-95"
-            >
-              <Apple className="w-4 h-4 text-white fill-white" />
-              <div className="text-left">
-                <div className="text-[9px] uppercase tracking-wider text-slate-400 font-mono">
-                  Download on
-                </div>
-                <div className="text-xs font-semibold leading-none text-white">
-                  App Store
-                </div>
-              </div>
-            </a>
-          </div>
+          
         </div>
 
-        {/* Column 2: Category */}
-        <div>
-          <h3 className="text-white font-semibold text-base mb-4 pb-2 border-b border-dashed border-slate-800">
-            Category
-          </h3>
-          <ul className="space-y-2.5 text-slate-400 text-xs font-medium">
-            <li>
-              <Link href="/category/components" className="hover:text-blue-400 transition-colors">
-                Components
-              </Link>
-            </li>
-            <li>
-              <Link href="/category/accessories" className="hover:text-blue-400 transition-colors">
-                Accessories
-              </Link>
-            </li>
-            <li>
-              <Link href="/category/microcontrollers" className="hover:text-blue-400 transition-colors">
-                Microcontrollers
-              </Link>
-            </li>
-            <li>
-              <Link href="/category/3d-printers" className="hover:text-blue-400 transition-colors">
-                3D Printers
-              </Link>
-            </li>
-            <li>
-              <Link href="/category/rc-hobby" className="hover:text-blue-400 transition-colors">
-                RC Hobby
-              </Link>
-            </li>
-            <li>
-              <Link href="/category/diy-robot" className="hover:text-blue-400 transition-colors">
-                DIY Robot
-              </Link>
-            </li>
-          </ul>
-        </div>
+      
 
         {/* Column 3: Company */}
         <div>
