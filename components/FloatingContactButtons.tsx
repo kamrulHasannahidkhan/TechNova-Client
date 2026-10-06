@@ -1,6 +1,6 @@
 "use client";
 
-const WHATSAPP_NUMBER = "8801XXXXXXXXX"; // TODO: replace with your real WhatsApp number (country code, no +, no spaces)
+const WHATSAPP_NUMBER = "8801606586207"; // TODO: replace with your real WhatsApp number (country code, no +, no spaces)
 const TELEGRAM_USERNAME = "yourusername"; // TODO: replace with your real Telegram username (no @)
 
 export default function FloatingContactButtons() {
