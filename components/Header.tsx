@@ -11,11 +11,12 @@ import {
   Search,
   ShoppingBag,
   LogIn,
-  UserPlus,
   LogOut,
   User,
   ChevronDown,
   Grid,
+  MoreVertical,
+  X,
 } from "lucide-react";
 
 export default function Header() {
@@ -27,6 +28,8 @@ export default function Header() {
   const [query, setQuery] = useState("");
   const [departments, setDepartments] = useState<any[]>([]);
   const [deptOpen, setDeptOpen] = useState(false);
+  const [mobileDeptOpen, setMobileDeptOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -74,27 +77,37 @@ export default function Header() {
     e.preventDefault();
     if (query.trim()) {
       setSuggestOpen(false);
+      setMobileMenuOpen(false);
       router.push(`/search?q=${encodeURIComponent(query.trim())}`);
     }
   };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#0a192f] border-b border-slate-800 text-slate-100 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between lg:justify-between relative">
         
-        {/* Left Section: Brand Logo + Nav Links */}
-        <div className="flex items-center gap-6 lg:gap-8">
-          {/* Brand Logo */}
-          <Link
-  href="/"
-  className="font-sans text-xl sm:text-2xl font-black tracking-tight text-white hover:opacity-80 transition-opacity shrink-0 flex items-center"
->
-  
-  <span className="text-white">Tech</span>
-  <span className="text-orange-500">Nova</span>
-</Link>
+        {/* Mobile 3-Dots Button (Visible on mobile/tablet, hidden on LG+) */}
+        <div className="flex lg:hidden items-center">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-xl text-slate-200 hover:bg-slate-800 transition-colors"
+            aria-label="More options"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <MoreVertical className="w-6 h-6" />}
+          </button>
+        </div>
 
-          {/* Navigation Items */}
+        {/* Brand Logo (Centered on mobile, left-aligned on desktop) */}
+        <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 flex items-center gap-6 lg:gap-8">
+          <Link
+            href="/"
+            className="font-sans text-xl sm:text-2xl font-black tracking-tight text-white hover:opacity-80 transition-opacity shrink-0 flex items-center"
+          >
+            <span className="text-white">Tech</span>
+            <span className="text-orange-500">Nova</span>
+          </Link>
+
+          {/* Desktop Navigation Items */}
           <nav className="hidden lg:flex items-center gap-5 text-sm font-medium text-slate-300">
             <Link
               href="/"
@@ -122,7 +135,7 @@ export default function Header() {
               Best Sellers
             </Link>
 
-            {/* Departments Dropdown */}
+            {/* Desktop Departments Dropdown */}
             <div
               className="relative"
               onMouseEnter={openDept}
@@ -137,7 +150,6 @@ export default function Header() {
                 <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
               </button>
 
-              {/* Refined Popover Grid */}
               {deptOpen && departments.length > 0 && (
                 <div className="absolute left-0 top-full mt-1 min-w-[280px] max-w-[380px] bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-3 z-50 backdrop-blur-xl">
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -172,14 +184,13 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Right Section: Compact Search Bar + Actions */}
-        <div className="flex items-center gap-3 shrink-0">
-          {/* Inline Search Bar */}
-          <div ref={searchBoxRef} className="relative hidden sm:block w-48 md:w-60 lg:w-64">
-            <form
-              onSubmit={handleSearch}
-              className="relative flex items-center w-full"
-            >
+        {/* Placeholder element for balance on mobile */}
+        <div className="lg:hidden w-8" />
+
+        {/* Right Section: Desktop Search Bar + Login + Cart */}
+        <div className="hidden lg:flex items-center gap-3 shrink-0">
+          <div ref={searchBoxRef} className="relative w-48 md:w-60 lg:w-64">
+            <form onSubmit={handleSearch} className="relative flex items-center w-full">
               <input
                 type="text"
                 value={query}
@@ -191,7 +202,6 @@ export default function Header() {
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             </form>
 
-            {/* Auto-suggest Popover */}
             {suggestOpen && suggestions.length > 0 && (
               <div className="absolute left-0 top-full mt-1 w-72 sm:w-80 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl py-2 z-50 backdrop-blur-xl max-h-80 overflow-y-auto">
                 {suggestions.map((p: any) => (
@@ -220,7 +230,6 @@ export default function Header() {
             )}
           </div>
 
-          {/* User Account or single Login button */}
           {session?.user ? (
             <div className="flex items-center gap-2">
               <Link
@@ -239,16 +248,15 @@ export default function Header() {
               </button>
             </div>
           ) : (
-           <Link
-  href="/login"
-  className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 transition-colors"
->
-  <LogIn className="w-3 h-3" />
-  <span>Login</span>
-</Link>
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-100 transition-colors"
+            >
+              <LogIn className="w-3 h-3" />
+              <span>Login</span>
+            </Link>
           )}
 
-          {/* Cart Icon Button */}
           <Link
             href="/cart"
             className="relative p-2 rounded-xl text-slate-200 hover:bg-slate-900 border border-transparent hover:border-slate-800 transition-all flex items-center justify-center"
@@ -264,6 +272,133 @@ export default function Header() {
         </div>
 
       </div>
+
+      {/* Mobile Options Drawer (Opens when clicking 3 dots) */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden bg-slate-900 border-b border-slate-800 px-4 pt-3 pb-6 space-y-4">
+          {/* Mobile Search Bar */}
+          <form onSubmit={handleSearch} className="relative w-full">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search..."
+              className="w-full bg-slate-950 text-slate-100 placeholder:text-slate-500 border border-slate-800 rounded-xl px-3.5 py-2 pl-9 text-xs focus:outline-none focus:border-blue-500"
+            />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          </form>
+
+          {/* Navigation Links */}
+          <nav className="flex flex-col gap-3 text-sm font-medium text-slate-200 border-t border-slate-800 pt-3">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="hover:text-blue-400 transition-colors"
+            >
+              Home
+            </Link>
+            <Link
+              href="/new-arrivals"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2 hover:text-blue-400 transition-colors"
+            >
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              New Arrivals
+            </Link>
+            <Link
+              href="/exclusive"
+              onClick={() => setMobileMenuOpen(false)}
+              className="hover:text-blue-400 transition-colors"
+            >
+              Exclusive
+            </Link>
+            <Link
+              href="/best-sellers"
+              onClick={() => setMobileMenuOpen(false)}
+              className="hover:text-blue-400 transition-colors"
+            >
+              Best Sellers
+            </Link>
+
+            {/* Mobile Accordion for Departments */}
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobileDeptOpen(!mobileDeptOpen)}
+                className="flex items-center justify-between w-full text-left py-1 text-slate-200 hover:text-blue-400 transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <Grid className="w-4 h-4 text-blue-500" />
+                  Departments
+                </span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${mobileDeptOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              {mobileDeptOpen && departments.length > 0 && (
+                <div className="grid grid-cols-2 gap-2 mt-2 pl-4 border-l border-slate-800">
+                  {departments.map((d: any) => (
+                    <Link
+                      key={d._id}
+                      href={`/department/${d._id}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2 p-1.5 text-xs text-slate-300 hover:text-blue-400"
+                    >
+                      {d.image && (
+                        <img src={d.image} alt="" className="w-6 h-6 object-contain rounded bg-white p-0.5" />
+                      )}
+                      <span className="truncate">{d.title}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </nav>
+
+          {/* User Account & Cart Section inside Mobile Drawer */}
+          <div className="border-t border-slate-800 pt-3 flex items-center justify-between">
+            {session?.user ? (
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/account"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 text-sm font-semibold text-slate-200"
+                >
+                  <User className="w-4 h-4 text-slate-400" />
+                  <span>{session.user.name?.split(" ")[0] || "Account"}</span>
+                </Link>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    signOut({ callbackUrl: "/" });
+                  }}
+                  className="flex items-center gap-1 text-xs text-rose-400"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Login</span>
+              </Link>
+            )}
+
+            <Link
+              href="/cart"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2 text-sm font-medium text-slate-200 bg-slate-800 px-3 py-1.5 rounded-xl"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              <span>Cart ({count})</span>
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
