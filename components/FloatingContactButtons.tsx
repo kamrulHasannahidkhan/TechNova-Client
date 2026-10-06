@@ -5,7 +5,7 @@ const TELEGRAM_USERNAME = "yourusername"; // TODO: replace with your real Telegr
 
 export default function FloatingContactButtons() {
   return (
-    <div className="fixed left-4 bottom-4 z-[90] flex flex-col gap-3">
+    <div className="fixed left-4 bottom-4 z-[90] flex flex-row gap-3">
       <a
         href={`https://wa.me/${WHATSAPP_NUMBER}`}
         target="_blank"
