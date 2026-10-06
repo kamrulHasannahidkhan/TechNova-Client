@@ -84,24 +84,16 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#0a192f] border-b border-slate-800 text-slate-100 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between lg:justify-between relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between relative">
         
-        {/* Mobile 3-Dots Button (Visible on mobile/tablet, hidden on LG+) */}
-        <div className="flex lg:hidden items-center">
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-xl text-slate-200 hover:bg-slate-800 transition-colors"
-            aria-label="More options"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <MoreVertical className="w-6 h-6" />}
-          </button>
-        </div>
+        {/* Left Side: Empty spacer on mobile to keep TechNova centered / Desktop Nav items */}
+        <div className="flex items-center gap-6 lg:gap-8">
+          <div className="lg:hidden w-10 h-10" />
 
-        {/* Brand Logo (Centered on mobile, left-aligned on desktop) */}
-        <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 flex items-center gap-6 lg:gap-8">
+          {/* Desktop Brand Logo */}
           <Link
             href="/"
-            className="font-sans text-xl sm:text-2xl font-black tracking-tight text-white hover:opacity-80 transition-opacity shrink-0 flex items-center"
+            className="hidden lg:flex font-sans text-2xl font-black tracking-tight text-white hover:opacity-80 transition-opacity shrink-0 items-center"
           >
             <span className="text-white">Tech</span>
             <span className="text-orange-500">Nova</span>
@@ -184,123 +176,150 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Placeholder element for balance on mobile */}
-        <div className="lg:hidden w-8" />
+        {/* Center: Mobile Brand Logo */}
+        <div className="absolute left-1/2 -translate-x-1/2 lg:hidden flex items-center">
+          <Link
+            href="/"
+            className="font-sans text-xl font-black tracking-tight text-white hover:opacity-80 transition-opacity"
+          >
+            <span className="text-white">Tech</span>
+            <span className="text-orange-500">Nova</span>
+          </Link>
+        </div>
 
-        {/* Right Section: Desktop Search Bar + Login + Cart */}
-        <div className="hidden lg:flex items-center gap-3 shrink-0">
-          <div ref={searchBoxRef} className="relative w-48 md:w-60 lg:w-64">
-            <form onSubmit={handleSearch} className="relative flex items-center w-full">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onFocus={() => suggestions.length > 0 && setSuggestOpen(true)}
-                placeholder="Search..."
-                className="w-full bg-slate-900/90 text-slate-100 placeholder:text-slate-500 border border-slate-800 rounded-xl px-3.5 py-1.5 pl-9 text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
-              />
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            </form>
+        {/* Right Side: 3-Dots Button on Mobile / Full Actions on Desktop */}
+        <div className="flex items-center gap-3 shrink-0">
+          
+          {/* Modified 3-Dots Button (Mobile/Tablet Right Side) */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 active:scale-95 transition-all duration-200 shadow-sm"
+            aria-label="Toggle options menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5 text-orange-500" />
+            ) : (
+              <MoreVertical className="w-5 h-5 text-slate-200" />
+            )}
+          </button>
 
-            {suggestOpen && suggestions.length > 0 && (
-              <div className="absolute left-0 top-full mt-1 w-72 sm:w-80 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl py-2 z-50 backdrop-blur-xl max-h-80 overflow-y-auto">
-                {suggestions.map((p: any) => (
-                  <Link
-                    key={p._id}
-                    href={`/department/${p.department?._id}/${p._id}`}
-                    onClick={() => setSuggestOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2 hover:bg-slate-800/60 transition-colors"
+          {/* Desktop Right Actions (Search + Auth + Cart) */}
+          <div className="hidden lg:flex items-center gap-3">
+            <div ref={searchBoxRef} className="relative w-48 md:w-60 lg:w-64">
+              <form onSubmit={handleSearch} className="relative flex items-center w-full">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => suggestions.length > 0 && setSuggestOpen(true)}
+                  placeholder="Search..."
+                  className="w-full bg-slate-900/90 text-slate-100 placeholder:text-slate-500 border border-slate-800 rounded-xl px-3.5 py-1.5 pl-9 text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                />
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              </form>
+
+              {suggestOpen && suggestions.length > 0 && (
+                <div className="absolute left-0 top-full mt-1 w-72 sm:w-80 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl py-2 z-50 backdrop-blur-xl max-h-80 overflow-y-auto">
+                  {suggestions.map((p: any) => (
+                    <Link
+                      key={p._id}
+                      href={`/department/${p.department?._id}/${p._id}`}
+                      onClick={() => setSuggestOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2 hover:bg-slate-800/60 transition-colors"
+                    >
+                      {p.images?.[0] && (
+                        <img src={p.images[0]} alt="" className="w-9 h-9 object-contain rounded bg-white border border-slate-700 shrink-0" />
+                      )}
+                      <div className="min-w-0">
+                        <p className="text-sm text-slate-200 truncate">{p.name}</p>
+                        <p className="text-xs text-slate-400">৳{p.price?.toLocaleString()}</p>
+                      </div>
+                    </Link>
+                  ))}
+                  <button
+                    onClick={(e) => { e.preventDefault(); handleSearch(e); }}
+                    className="w-full text-left px-3 py-2 text-sm text-blue-400 font-medium hover:bg-slate-800/60 transition-colors border-t border-slate-800 mt-1"
                   >
-                    {p.images?.[0] && (
-                      <img src={p.images[0]} alt="" className="w-9 h-9 object-contain rounded bg-white border border-slate-700 shrink-0" />
-                    )}
-                    <div className="min-w-0">
-                      <p className="text-sm text-slate-200 truncate">{p.name}</p>
-                      <p className="text-xs text-slate-400">৳{p.price?.toLocaleString()}</p>
-                    </div>
-                  </Link>
-                ))}
-                <button
-                  onClick={(e) => { e.preventDefault(); handleSearch(e); }}
-                  className="w-full text-left px-3 py-2 text-sm text-blue-400 font-medium hover:bg-slate-800/60 transition-colors border-t border-slate-800 mt-1"
+                    See all results for &quot;{query}&quot;
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {session?.user ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/account"
+                  className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-200 hover:text-blue-400 transition-colors px-2 py-1.5 rounded-lg"
                 >
-                  See all results for &quot;{query}&quot;
+                  <User className="w-4 h-4 text-slate-400" />
+                  <span>{session.user.name?.split(" ")[0] || "Account"}</span>
+                </Link>
+                <button
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="flex items-center gap-1 text-xs sm:text-sm font-medium text-slate-400 hover:text-rose-400 transition-colors p-1.5 rounded-lg"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-4 h-4" />
                 </button>
               </div>
+            ) : (
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-100 transition-colors"
+              >
+                <LogIn className="w-3 h-3" />
+                <span>Login</span>
+              </Link>
             )}
+
+            <Link
+              href="/cart"
+              className="relative p-2 rounded-xl text-slate-200 hover:bg-slate-900 border border-transparent hover:border-slate-800 transition-all flex items-center justify-center"
+              aria-label="Cart"
+            >
+              <ShoppingBag className="w-5 h-5 text-slate-200" />
+              {count > 0 && (
+                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                  {count}
+                </span>
+              )}
+            </Link>
           </div>
 
-          {session?.user ? (
-            <div className="flex items-center gap-2">
-              <Link
-                href="/account"
-                className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-200 hover:text-blue-400 transition-colors px-2 py-1.5 rounded-lg"
-              >
-                <User className="w-4 h-4 text-slate-400" />
-                <span>{session.user.name?.split(" ")[0] || "Account"}</span>
-              </Link>
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="flex items-center gap-1 text-xs sm:text-sm font-medium text-slate-400 hover:text-rose-400 transition-colors p-1.5 rounded-lg"
-                title="Sign Out"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-100 transition-colors"
-            >
-              <LogIn className="w-3 h-3" />
-              <span>Login</span>
-            </Link>
-          )}
-
-          <Link
-            href="/cart"
-            className="relative p-2 rounded-xl text-slate-200 hover:bg-slate-900 border border-transparent hover:border-slate-800 transition-all flex items-center justify-center"
-            aria-label="Cart"
-          >
-            <ShoppingBag className="w-5 h-5 text-slate-200" />
-            {count > 0 && (
-              <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
-                {count}
-              </span>
-            )}
-          </Link>
         </div>
 
       </div>
 
-      {/* Mobile Options Drawer (Opens when clicking 3 dots) */}
+      {/* Mobile Drawer (Menu) */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-slate-900 border-b border-slate-800 px-4 pt-3 pb-6 space-y-4">
-          {/* Mobile Search Bar */}
+        <div className="lg:hidden bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 px-4 pt-3 pb-6 space-y-4 shadow-2xl animate-in slide-in-from-top-2 duration-200">
+          
+          {/* Search Bar inside Drawer */}
           <form onSubmit={handleSearch} className="relative w-full">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search..."
+              placeholder="Search products..."
               className="w-full bg-slate-950 text-slate-100 placeholder:text-slate-500 border border-slate-800 rounded-xl px-3.5 py-2 pl-9 text-xs focus:outline-none focus:border-blue-500"
             />
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           </form>
 
           {/* Navigation Links */}
-          <nav className="flex flex-col gap-3 text-sm font-medium text-slate-200 border-t border-slate-800 pt-3">
+          <nav className="flex flex-col gap-3 text-sm font-medium text-slate-200 border-t border-slate-800/80 pt-3">
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="hover:text-blue-400 transition-colors"
+              className="hover:text-blue-400 transition-colors py-1"
             >
               Home
             </Link>
             <Link
               href="/new-arrivals"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 hover:text-blue-400 transition-colors"
+              className="flex items-center gap-2 hover:text-blue-400 transition-colors py-1"
             >
               <Sparkles className="w-4 h-4 text-amber-500" />
               New Arrivals
@@ -308,19 +327,19 @@ export default function Header() {
             <Link
               href="/exclusive"
               onClick={() => setMobileMenuOpen(false)}
-              className="hover:text-blue-400 transition-colors"
+              className="hover:text-blue-400 transition-colors py-1"
             >
               Exclusive
             </Link>
             <Link
               href="/best-sellers"
               onClick={() => setMobileMenuOpen(false)}
-              className="hover:text-blue-400 transition-colors"
+              className="hover:text-blue-400 transition-colors py-1"
             >
               Best Sellers
             </Link>
 
-            {/* Mobile Accordion for Departments */}
+            {/* Accordion Departments */}
             <div>
               <button
                 type="button"
@@ -331,7 +350,7 @@ export default function Header() {
                   <Grid className="w-4 h-4 text-blue-500" />
                   Departments
                 </span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${mobileDeptOpen ? "rotate-180" : ""}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${mobileDeptOpen ? "rotate-180" : ""}`} />
               </button>
 
               {mobileDeptOpen && departments.length > 0 && (
@@ -341,7 +360,7 @@ export default function Header() {
                       key={d._id}
                       href={`/department/${d._id}`}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 p-1.5 text-xs text-slate-300 hover:text-blue-400"
+                      className="flex items-center gap-2 p-1.5 text-xs text-slate-300 hover:text-blue-400 rounded-lg hover:bg-slate-800/50"
                     >
                       {d.image && (
                         <img src={d.image} alt="" className="w-6 h-6 object-contain rounded bg-white p-0.5" />
@@ -354,14 +373,14 @@ export default function Header() {
             </div>
           </nav>
 
-          {/* User Account & Cart Section inside Mobile Drawer */}
-          <div className="border-t border-slate-800 pt-3 flex items-center justify-between">
+          {/* User Account & Cart inside Drawer */}
+          <div className="border-t border-slate-800/80 pt-3 flex items-center justify-between">
             {session?.user ? (
               <div className="flex items-center gap-3">
                 <Link
                   href="/account"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 text-sm font-semibold text-slate-200"
+                  className="flex items-center gap-2 text-sm font-semibold text-slate-200 hover:text-blue-400 transition-colors"
                 >
                   <User className="w-4 h-4 text-slate-400" />
                   <span>{session.user.name?.split(" ")[0] || "Account"}</span>
@@ -371,7 +390,7 @@ export default function Header() {
                     setMobileMenuOpen(false);
                     signOut({ callbackUrl: "/" });
                   }}
-                  className="flex items-center gap-1 text-xs text-rose-400"
+                  className="flex items-center gap-1 text-xs text-rose-400 hover:text-rose-300"
                 >
                   <LogOut className="w-4 h-4" />
                   Sign Out
@@ -391,7 +410,7 @@ export default function Header() {
             <Link
               href="/cart"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 text-sm font-medium text-slate-200 bg-slate-800 px-3 py-1.5 rounded-xl"
+              className="flex items-center gap-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 px-3.5 py-2 rounded-xl shadow-md transition-colors"
             >
               <ShoppingBag className="w-4 h-4" />
               <span>Cart ({count})</span>
