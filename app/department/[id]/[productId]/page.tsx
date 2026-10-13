@@ -1,10 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from "@/components/AddToCartButton";
 import BuyNowButton from "@/components/BuyNowButton";
+import ProductGallery from "@/components/ProductGallery";
 import { getDepartmentProducts } from "@/lib/api";
 import { ShieldCheck, Zap, ChevronRight, PackageCheck } from "lucide-react";
-
 export default async function ProductPage({ params }: { params: Promise<{ id: string; productId: string }> }) {
   const { id, productId } = await params;
   const products = await getDepartmentProducts(id);
@@ -51,22 +50,9 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       {/* Main Product Card */}
       <div className="bg-white dark:bg-[#112240] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-10 grid md:grid-cols-12 gap-8 md:gap-12 items-start shadow-sm dark:shadow-2xl transition-colors">
         
-        {/* Left Column: Image Container */}
-        <div className="md:col-span-6 space-y-4">
-          <div className="relative w-full aspect-square bg-slate-50 dark:bg-[#0a192f] rounded-2xl border border-slate-200 dark:border-slate-700/80 overflow-hidden flex items-center justify-center p-6 group">
-            {product.images?.[0] ? (
-              <Image
-                src={product.images[0]}
-                alt={product.name}
-                fill
-                priority
-                className="object-contain p-6 transition-transform duration-300 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            ) : (
-              <div className="text-slate-400 dark:text-slate-500 text-xs font-medium">No image preview available</div>
-            )}
-          </div>
+        {/* Left Column: Image Gallery */}
+        <div className="md:col-span-6">
+          <ProductGallery images={product.images} name={product.name} />
         </div>
 
         {/* Right Column: Product Details */}

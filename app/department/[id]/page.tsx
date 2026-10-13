@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import ProductGallery from "@/components/ProductGallery";
 import { getDepartmentProducts, getDepartments } from "@/lib/api";
 
 export default async function DepartmentPage({ params }: { params: Promise<{ id: string }> }) {
