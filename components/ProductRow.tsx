@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Sparkles, Tag } from "lucide-react";
+import NewArrivalBadge from "@/components/NewArrivalBadge";
 
 interface Product {
   _id: string;
@@ -9,6 +10,7 @@ interface Product {
   originalPrice?: number;
   images?: string[];
   warranty?: string;
+  createdAt?: string;
   department?: {
     _id: string;
   };
@@ -19,6 +21,7 @@ interface ProductRowProps {
   title: string;
   subtitle?: string;
   products: Product[];
+  showNewBadge?: boolean;
 }
 
 export default function ProductRow({
@@ -26,6 +29,7 @@ export default function ProductRow({
   title,
   subtitle = "Discover the latest products added to our collection.",
   products,
+  showNewBadge = false,
 }: ProductRowProps) {
   if (!products || products.length === 0) return null;
 
@@ -90,10 +94,16 @@ export default function ProductRow({
                   </div>
                 )}
 
-                {/* Warranty Badge */}
-                <span className="absolute bottom-2.5 right-2.5 bg-slate-900 text-amber-400 border border-amber-400/20 text-[9px] font-mono font-bold px-1.5 py-1 rounded-md leading-tight text-center uppercase tracking-wider shadow-md">
-                  {p.warranty ? p.warranty : <>6<br />MONTHS</>}
-                </span>
+                {/* New Arrivals: countdown badge. Other rows: warranty badge only if set */}
+                {showNewBadge ? (
+                  <NewArrivalBadge createdAt={p.createdAt} />
+                ) : (
+                  p.warranty && (
+                    <span className="absolute bottom-2.5 right-2.5 bg-slate-900 text-amber-400 border border-amber-400/20 text-[9px] font-mono font-bold px-1.5 py-1 rounded-md leading-tight text-center uppercase tracking-wider shadow-md">
+                      {p.warranty}
+                    </span>
+                  )
+                )}
               </div>
 
               {/* Product Info */}

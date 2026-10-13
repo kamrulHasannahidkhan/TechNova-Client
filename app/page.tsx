@@ -13,13 +13,15 @@ async function ProductRowAsync({
   id,
   title,
   tag,
+  showNewBadge = false,
 }: {
   id: string;
   title: string;
   tag: string;
+  showNewBadge?: boolean;
 }) {
   const products = await getProductsByTag(tag);
-  return <ProductRow id={id} title={title} products={products} />;
+  return <ProductRow id={id} title={title} products={products} showNewBadge={showNewBadge} />;
 }
 
 // Skeleton loader matching ProductRow structure
@@ -43,7 +45,7 @@ export default function HomePage() {
       <DepartmentsSection />
 
       <Suspense fallback={<ProductRowSkeleton />}>
-        <ProductRowAsync id="new-arrivals" title="New Arrivals" tag="new-arrival" />
+        <ProductRowAsync id="new-arrivals" title="New Arrivals" tag="new-arrival" showNewBadge />
       </Suspense>
 
       <Suspense fallback={<ProductRowSkeleton />}>
@@ -53,6 +55,7 @@ export default function HomePage() {
       <Suspense fallback={<ProductRowSkeleton />}>
         <ProductRowAsync id="best-sellers" title="Best Sellers" tag="best-seller" />
       </Suspense>
+
       <TrustBadges />
 
       <BottomBanner />
