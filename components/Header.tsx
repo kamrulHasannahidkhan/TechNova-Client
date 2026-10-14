@@ -126,6 +126,7 @@ export default function Header() {
             >
               Best Sellers
             </Link>
+            <Link href="/products" className="hover:text-blue-400 transition-colors whitespace-nowrap">All Products</Link>
 
             {/* Desktop Departments Dropdown */}
             <div
@@ -341,6 +342,7 @@ export default function Header() {
             >
               Best Sellers
             </Link>
+            <Link href="/products" className="hover:text-blue-400 transition-colors whitespace-nowrap">All Products</Link>
             
 
             {/* Accordion Departments */}
