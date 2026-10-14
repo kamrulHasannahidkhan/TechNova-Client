@@ -317,8 +317,9 @@ export default function Header() {
             >
               Home
             </Link>
-            <Link href="/products" className="hover:text-blue-400 transition-colors whitespace-nowrap">All Products</Link>
-
+            <Link href="/products" className="hover:text-blue-400 transition-colors whitespace-nowrap">
+                All Products
+            </Link>
             <Link
               href="/new-arrivals"
               onClick={() => setMobileMenuOpen(false)}
@@ -341,6 +342,7 @@ export default function Header() {
             >
               Best Sellers
             </Link>
+            <Link href="/products" className="hover:text-blue-400 transition-colors whitespace-nowrap">All Products</Link>
             
 
             {/* Accordion Departments */}
