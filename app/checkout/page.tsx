@@ -259,10 +259,9 @@ export default function CheckoutPage() {
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                Email Address *
+                Email Address (Optional)
               </label>
               <input
-                required
                 type="email"
                 className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
                 value={form.email}
