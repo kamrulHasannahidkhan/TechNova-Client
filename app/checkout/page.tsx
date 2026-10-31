@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useSession } from "next-auth/react";
 import { submitOrder } from "@/lib/api";
+import AreaPicker from "@/components/AreaPicker";
+import { SHIPPING_ZONES, getShippingZone, type ShippingZone } from "@/lib/bd-locations";
 import {
   CheckCircle2,
   Truck,
@@ -13,34 +15,6 @@ import {
   ShieldCheck,
   CreditCard,
 } from "lucide-react";
-
-const SHIPPING_OPTIONS = [
-  { key: "inside", label: "Inside Dhaka City", price: 70 },
-  { key: "outside", label: "Outside Dhaka", price: 130 },
-];
-
-const DIVISIONS = [
-  "Barishal",
-  "Chattogram",
-  "Dhaka",
-  "Khulna",
-  "Mymensingh",
-  "Rajshahi",
-  "Rangpur",
-  "Sylhet",
-];
-
-const DISTRICTS_64 = [
-  "Bagerhat", "Bandarban", "Barguna", "Barishal", "Bhola", "Bogra", "Brahmanbaria",
-  "Chandpur", "Chattogram", "Chuadanga", "Cox's Bazar", "Cumilla", "Dhamrai", "Dinajpur",
-  "Faridpur", "Feni", "Gaibandha", "Gazipur", "Gopalganj", "Habiganj", "Jamalpur",
-  "Jeshore", "Jhalokati", "Jhenaidah", "Joypurhat", "Khagrachhari", "Khulna", "Kishoreganj",
-  "Kurigram", "Kushtia", "Lakshmipur", "Lalmonirhat", "Madaripur", "Magura", "Manikganj",
-  "Meherpur", "Moulvibazar", "Munshiganj", "Mymensingh", "Naogaon", "Narail", "Narayanganj",
-  "Narsingdi", "Natore", "Nawabganj", "Netrokona", "Nilphamari", "Noakhali", "Pabna",
-  "Panchagarh", "Patuakhali", "Pirojpur", "Rajbari", "Rajshahi", "Rangamati", "Rangpur",
-  "Satkhira", "Shariatpur", "Sherpur", "Sirajganj", "Sunamganj", "Sylhet", "Tangail", "Thakurgaon"
-];
 
 type SavedAddress = {
   _id: string;
@@ -63,12 +37,12 @@ export default function CheckoutPage() {
     email: "",
     division: "",
     district: "",
+    thana: "",
     address: "",
     notes: "",
   });
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
-  const [shipping, setShipping] = useState("inside");
   const [placing, setPlacing] = useState(false);
   const [placed, setPlaced] = useState(false);
 
@@ -91,6 +65,7 @@ export default function CheckoutPage() {
       phone: addr.phone,
       address: addr.address,
       district: addr.district,
+      thana: "",
     }));
     setSelectedAddressId(addr._id);
   };
@@ -120,7 +95,8 @@ export default function CheckoutPage() {
     );
   }
 
-  const shippingCost = SHIPPING_OPTIONS.find((s) => s.key === shipping)?.price ?? 0;
+  const zone: ShippingZone | null = form.thana ? getShippingZone(form.district, form.thana) : null;
+  const shippingCost = zone ? SHIPPING_ZONES[zone].price : 0;
   const grandTotal = total + shippingCost;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -140,10 +116,11 @@ export default function CheckoutPage() {
           email: form.email,
           division: form.division,
           district: form.district,
+          thana: form.thana,
           address: form.address,
           notes: form.notes,
         },
-        shippingOption: SHIPPING_OPTIONS.find((s) => s.key === shipping)?.label,
+        shippingOption: zone ? SHIPPING_ZONES[zone].label : "",
         shippingCost,
         subtotal: total,
         total: grandTotal,
@@ -269,48 +246,17 @@ export default function CheckoutPage() {
               />
             </div>
 
-          {/*  <div>
+            <div className="sm:col-span-2">
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                Division *
+                Area (Thana / Upazila, District) *
               </label>
-              <select
-                required
-                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
-                value={form.division}
-                onChange={(e) => {
-                  setForm({ ...form, division: e.target.value });
+              <AreaPicker
+                value={form.thana ? `${form.thana}, ${form.district}` : ""}
+                onSelect={({ thana, district }) => {
+                  setForm({ ...form, thana, district });
                   setSelectedAddressId(null);
                 }}
-              >
-                <option value="">Select Division</option>
-                {DIVISIONS.map((div) => (
-                  <option key={div} value={div}>
-                    {div}
-                  </option>
-                ))}
-              </select>
-            </div>*/}
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                District *
-              </label>
-              <select
-                required
-                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
-                value={form.district}
-                onChange={(e) => {
-                  setForm({ ...form, district: e.target.value });
-                  setSelectedAddressId(null);
-                }}
-              >
-                <option value="">Select District</option>
-                {DISTRICTS_64.map((dist) => (
-                  <option key={dist} value={dist}>
-                    {dist}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
 
             <div className="sm:col-span-2">
@@ -319,7 +265,7 @@ export default function CheckoutPage() {
               </label>
               <input
                 required
-                placeholder="House, Road, Area, Thana/Upazila"
+                placeholder="House, Road, Area"
                 className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#0a192f] text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition"
                 value={form.address}
                 onChange={(e) => {
@@ -376,29 +322,33 @@ export default function CheckoutPage() {
                 Shipping Location
               </span>
               <div className="space-y-2">
-                {SHIPPING_OPTIONS.map((opt) => (
-                  <label
-                    key={opt.key}
-                    className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
-                      shipping === opt.key
+                {(Object.keys(SHIPPING_ZONES) as ShippingZone[]).map((key) => (
+                  <div
+                    key={key}
+                    className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                      zone === key
                         ? "border-blue-500 bg-blue-50/50 dark:bg-blue-950/20 text-slate-900 dark:text-slate-100"
-                        : "border-slate-200 dark:border-slate-800 hover:border-slate-300 text-slate-600 dark:text-slate-400"
+                        : "border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 opacity-60"
                     }`}
                   >
                     <span className="flex items-center gap-2 text-xs font-semibold">
                       <input
                         type="radio"
-                        name="shipping"
-                        checked={shipping === opt.key}
-                        onChange={() => setShipping(opt.key)}
-                        className="accent-blue-600"
+                        readOnly
+                        checked={zone === key}
+                        className="accent-blue-600 pointer-events-none"
                       />
-                      {opt.label}
+                      {SHIPPING_ZONES[key].label}
                     </span>
-                    <span className="text-xs font-bold">৳{opt.price}</span>
-                  </label>
+                    <span className="text-xs font-bold">৳{SHIPPING_ZONES[key].price}</span>
+                  </div>
                 ))}
               </div>
+              {!zone && (
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2">
+                  Select your area to see the delivery charge.
+                </p>
+              )}
             </div>
           </div>
 
