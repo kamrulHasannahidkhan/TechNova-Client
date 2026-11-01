@@ -146,3 +146,5 @@ export function getAllAreas(): AreaOption[] {
   }
   return list;
 }
+
+export const DISTRICTS = ["Dhaka", ...Object.keys(LOCATIONS)].sort();

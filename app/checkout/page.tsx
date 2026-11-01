@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useSession } from "next-auth/react";
 import { submitOrder } from "@/lib/api";
-import AreaPicker from "@/components/AreaPicker";
+import AreaSelect from "@/components/AreaSelect";
 import { SHIPPING_ZONES, getShippingZone, type ShippingZone } from "@/lib/bd-locations";
 import {
   CheckCircle2,
@@ -248,12 +248,13 @@ export default function CheckoutPage() {
 
             <div className="sm:col-span-2">
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                Area (Thana / Upazila, District) *
+                District and Thana / Upazila *
               </label>
-              <AreaPicker
-                value={form.thana ? `${form.thana}, ${form.district}` : ""}
-                onSelect={({ thana, district }) => {
-                  setForm({ ...form, thana, district });
+              <AreaSelect
+                district={form.district}
+                thana={form.thana}
+                onChange={({ district, thana }) => {
+                  setForm({ ...form, district, thana });
                   setSelectedAddressId(null);
                 }}
               />
