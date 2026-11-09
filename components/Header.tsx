@@ -256,6 +256,7 @@ export default function Header() {
                   <User className="w-4 h-4 text-slate-400" />
                   <span>{session.user.name?.split(" ")[0] || "Account"}</span>
                 </Link>
+              <Link href="/account/orders" className="text-xs sm:text-sm font-semibold text-slate-200 hover:text-blue-400 transition-colors whitespace-nowrap">My Orders</Link>
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
                   className="flex items-center gap-1 text-xs sm:text-sm font-medium text-slate-400 hover:text-rose-400 transition-colors p-1.5 rounded-lg"
@@ -391,6 +392,7 @@ export default function Header() {
                   <User className="w-4 h-4 text-slate-400" />
                   <span>{session.user.name?.split(" ")[0] || "Account"}</span>
                 </Link>
+              <Link href="/account/orders" className="text-xs sm:text-sm font-semibold text-slate-200 hover:text-blue-400 transition-colors whitespace-nowrap">My Orders</Link>
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);

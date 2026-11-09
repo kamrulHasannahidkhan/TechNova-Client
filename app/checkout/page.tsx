@@ -104,6 +104,7 @@ export default function CheckoutPage() {
     setPlacing(true);
     try {
       await submitOrder({
+        userEmail: user?.email,
         items: items.map((i) => ({
           productId: i._id,
           name: i.name,
