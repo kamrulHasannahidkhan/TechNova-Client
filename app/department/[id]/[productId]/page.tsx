@@ -2,6 +2,7 @@ import Link from "next/link";
 import AddToCartButton from "@/components/AddToCartButton";
 import BuyNowButton from "@/components/BuyNowButton";
 import ProductGallery from "@/components/ProductGallery";
+import PixelViewContent from "@/components/PixelViewContent";
 import { getDepartmentProducts } from "@/lib/api";
 import { ShieldCheck, Zap, ChevronRight, PackageCheck } from "lucide-react";
 export default async function ProductPage({ params }: { params: Promise<{ id: string; productId: string }> }) {
@@ -53,6 +54,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         {/* Left Column: Image Gallery */}
         <div className="md:col-span-6">
           <ProductGallery images={product.images} name={product.name} />
+          <PixelViewContent id={product._id} name={product.name} price={product.price} />
         </div>
 
         {/* Right Column: Product Details */}

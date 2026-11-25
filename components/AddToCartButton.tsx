@@ -1,4 +1,5 @@
 "use client";
+import { trackPixel } from "@/lib/pixel";
 import { useCart } from "@/context/CartContext";
 import { logCartAdd } from "@/lib/api";
 import { useState } from "react";
@@ -8,6 +9,7 @@ export default function AddToCartButton({ product }: { product: any }) {
   const [added, setAdded] = useState(false);
 
   const handleClick = () => {
+    trackPixel("AddToCart", { content_ids: [product._id], content_name: product.name, value: product.price, currency: "BDT" });
     addToCart({
       _id: product._id,
       name: product.name,

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useSession } from "next-auth/react";
 import { submitOrder } from "@/lib/api";
+import { trackPixel } from "@/lib/pixel";
 import AreaSelect from "@/components/AreaSelect";
 import { SHIPPING_ZONES, getShippingZone, type ShippingZone } from "@/lib/bd-locations";
 import {
@@ -45,6 +46,11 @@ export default function CheckoutPage() {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [placing, setPlacing] = useState(false);
   const [placed, setPlaced] = useState(false);
+  useEffect(() => {
+    if (!isHydrated || items.length === 0) return;
+    trackPixel("InitiateCheckout", { value: total, currency: "BDT", num_items: items.length });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isHydrated]);
 
   useEffect(() => {
     if (!user) return;
@@ -126,6 +132,7 @@ export default function CheckoutPage() {
         subtotal: total,
         total: grandTotal,
       });
+      trackPixel("Purchase", { value: grandTotal, currency: "BDT" });
       setPlaced(true);
       clearCart();
     } catch {
