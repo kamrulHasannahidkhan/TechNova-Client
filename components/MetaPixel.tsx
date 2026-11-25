@@ -2,12 +2,33 @@
 import { useEffect, useRef } from "react";
 import Script from "next/script";
 import { usePathname } from "next/navigation";
+import { logEvent } from "@/lib/pixel";
 
 const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
 export default function MetaPixel() {
   const pathname = usePathname();
   const first = useRef(true);
+
+  // Once per visit: work out where the visitor came from, and log the visit
+  useEffect(() => {
+    if (sessionStorage.getItem("traffic_source")) return;
+
+    const params = new URLSearchParams(window.location.search);
+    let source = params.get("utm_source");
+    if (!source && params.get("fbclid")) source = "facebook";
+    if (!source && document.referrer) {
+      try {
+        const host = new URL(document.referrer).hostname.replace("www.", "");
+        if (host !== window.location.hostname.replace("www.", "")) source = host;
+      } catch {
+        // ignore a bad referrer
+      }
+    }
+
+    sessionStorage.setItem("traffic_source", source || "direct");
+    logEvent("Visit");
+  }, []);
 
   // The script sends the first PageView. This sends one on every page change after that.
   useEffect(() => {
